@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "761468936140",
+    "firebase_url": "https://track-spending-martysun25.firebaseio.com",
+    "project_id": "track-spending-martysun25",
+    "storage_bucket": "track-spending-martysun25.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761468936140:android:67f8a74d1d23dc19",
+        "android_client_info": {
+          "package_name": "com.martysun25.trackspending"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761468936140-f9spj4bn5nm09tjr0n6pjl0f8hd51b2e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEgEDtuO4pIdG-gr_3nJvi792XhQM77_I"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
