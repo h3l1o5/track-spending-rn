@@ -3,8 +3,13 @@ import { SafeAreaView } from "react-native";
 import { Content, View, Text, Button, Icon } from "native-base";
 
 import color from "../../theme/color";
+import { NavigationAction, NavigationScreenProp } from "react-navigation";
 
-export class Guest extends Component {
+interface Props {
+  navigation: NavigationScreenProp<any, any>;
+}
+
+export class Guest extends Component<Props> {
   public render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -23,7 +28,15 @@ export class Guest extends Component {
             </Text>
           </View>
           <View style={{ flex: 3, justifyContent: "center", alignItems: "center" }}>
-            <Button iconLeft light bordered rounded block style={{ marginVertical: 10 }}>
+            <Button
+              iconLeft
+              light
+              bordered
+              rounded
+              block
+              style={{ marginVertical: 10 }}
+              onPress={() => this.props.navigation.navigate("Main")}
+            >
               <Icon type="FontAwesome" name="google" style={{ color: color.white }} />
               <Text style={{ color: color.white }}>使用Google帳號登入</Text>
             </Button>
