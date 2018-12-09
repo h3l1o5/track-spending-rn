@@ -8,6 +8,5 @@ target 'TrackSpending' do
   # Pods for TrackSpending
   pod 'Firebase/Core', '~> 5.11.0'
   pod 'Firebase/Auth', '~> 5.11.0'
-  pod 'GoogleSignIn'
 
 end
