@@ -6,6 +6,7 @@
     "object-literal-sort-keys": false,
     "jsx-no-lamdba": false,
     "jsx-boolean-value": false,
+    "member-ordering": false,
     "interface-name": false
   }
 }
