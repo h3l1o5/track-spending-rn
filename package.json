@@ -8,6 +8,7 @@
     "prettier": "prettier --write 'src/**/*.tsx'"
   },
   "dependencies": {
+    "lodash": "^4.17.11",
     "native-base": "^2.8.1",
     "react": "16.6.1",
     "react-native": "0.57.7",
@@ -18,6 +19,7 @@
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
     "@types/jest": "^23.3.10",
+    "@types/lodash": "^4.14.118",
     "@types/react": "^16.7.13",
     "@types/react-native": "^0.57.15",
     "@types/react-navigation": "^2.13.7",
