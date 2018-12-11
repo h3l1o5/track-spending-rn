@@ -12,6 +12,8 @@ export class Landing extends Component<Props> {
     try {
       await firebase.auth().signInAnonymously();
 
+      console.log(firebase.auth().currentUser);
+
       this.props.navigation.navigate("Main");
     } catch (error) {
       console.error(error);
