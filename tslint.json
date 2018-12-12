@@ -8,6 +8,7 @@
     "jsx-boolean-value": false,
     "member-ordering": false,
     "interface-name": false,
-    "jsx-no-lambda": false
+    "jsx-no-lambda": false,
+    "no-shadowed-variable": false
   }
 }

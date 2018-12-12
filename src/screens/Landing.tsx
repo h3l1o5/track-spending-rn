@@ -1,22 +1,61 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import firebase from "react-native-firebase";
+import { firestore, auth } from "react-native-firebase";
+import _ from "lodash";
+
+import { DEFAULT_LABELS } from "../util";
+import { connect } from "react-redux";
+import { spendingLabelActionCreators } from "../redux/reducers/spending-label.reducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
+  fetchSpendingLabels: (onSuccess: () => void) => void;
+}
+interface State {
+  isSpendingLabelsReady: boolean;
 }
 
 export class Landing extends Component<Props> {
+  public state: State = {
+    isSpendingLabelsReady: false,
+  };
+
   public async componentDidMount() {
     try {
-      await firebase.auth().signInAnonymously();
+      const credential = await auth().signInAnonymously();
+      const userUid = credential.user.uid;
 
-      console.log(firebase.auth().currentUser);
+      await firestore().runTransaction(transaction => {
+        const userDocRef = firestore()
+          .collection("user")
+          .doc(userUid);
 
-      this.props.navigation.navigate("Main");
+        return transaction.get(userDocRef).then(userDoc => {
+          if (!userDoc.exists) {
+            transaction.set(userDocRef, { createdAt: new Date() });
+
+            _.forEach(DEFAULT_LABELS, defaultLabel => {
+              const spendingLabelDocRef = firestore()
+                .collection(`user/${userUid}/spendingLabel`)
+                .doc(`${defaultLabel.category}_${defaultLabel.name}`);
+
+              transaction.set(spendingLabelDocRef, { ...defaultLabel, createdAt: new Date() });
+            });
+          }
+          // transaction must do something or it will be broken??
+          transaction.set(userDocRef, {}, { merge: true });
+        });
+      });
     } catch (error) {
       console.error(error);
+    }
+    this.props.fetchSpendingLabels(() => this.setState({ isSpendingLabelsReady: true }));
+  }
+
+  public async componentDidUpdate() {
+    if (this.state.isSpendingLabelsReady) {
+      this.props.navigation.navigate("Main");
     }
   }
 
@@ -29,4 +68,7 @@ export class Landing extends Component<Props> {
   }
 }
 
-export default Landing;
+export default connect(
+  null,
+  { fetchSpendingLabels: spendingLabelActionCreators.fetchSpendingLabel }
+)(Landing);

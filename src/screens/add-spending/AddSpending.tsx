@@ -1,25 +1,33 @@
 import React, { Component } from "react";
 import { SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 import { Content, Text, View, Button, Icon } from "native-base";
-import firebase from "react-native-firebase";
+import { connect } from "react-redux";
 import _ from "lodash";
 
 import NumberPad from "../../components/NumberPad";
 import color from "../../theme/color";
-import { DEFAULT_LABELS, getCategoryMandarin, getCategoryIcon } from "../../util";
+import { AppState, SpendingLabel } from "../../typings";
+import { getCategoryMandarin, getCategoryIcon } from "../../util";
+import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 
-export class AddSpending extends Component {
-  public state = {
+interface Props {
+  spendingLabels: SpendingLabel[] | null;
+}
+interface State {
+  spending: number;
+  selectedSpendingLabel: SpendingLabel | null;
+}
+
+export class AddSpending extends Component<Props, State> {
+  public state: State = {
     spending: 0,
+    selectedSpendingLabel: null,
   };
 
-  public async componentDidMount() {
-    const users = await firebase
-      .firestore()
-      .collection("User")
-      .get();
-
-    users.forEach(user => console.log(user.data()));
+  public componentDidUpdate() {
+    if (this.props.spendingLabels && !this.state.selectedSpendingLabel) {
+      this.setState({ selectedSpendingLabel: this.props.spendingLabels[0] });
+    }
   }
 
   public handleNumberPadPressed = (value: number | string) => {
@@ -33,6 +41,8 @@ export class AddSpending extends Component {
   };
 
   public render() {
+    const spendingLabels = this.props.spendingLabels || [];
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "flex-end" }}>
@@ -67,14 +77,14 @@ export class AddSpending extends Component {
                 <FlatList
                   showsVerticalScrollIndicator={false}
                   style={{ flex: 1, marginBottom: 10, marginHorizontal: 7, paddingTop: 10 }}
-                  data={_.map(DEFAULT_LABELS, defaultLabel => ({
-                    ...defaultLabel,
-                    category: getCategoryMandarin(defaultLabel.category),
-                    categoryIcon: getCategoryIcon(defaultLabel.category),
+                  data={_.map(spendingLabels, spendingLabel => ({
+                    ...spendingLabel,
+                    categoryMandarin: getCategoryMandarin(spendingLabel.category),
+                    categoryIcon: getCategoryIcon(spendingLabel.category),
                   }))}
                   keyExtractor={() => Math.random().toString()}
                   renderItem={({ item }) => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => this.setState({ selectedSpendingLabel: item })}>
                       <View style={{ flexDirection: "row", alignItems: "center" }}>
                         <Text>{item.categoryIcon}</Text>
                         <Text
@@ -82,11 +92,16 @@ export class AddSpending extends Component {
                           adjustsFontSizeToFit
                           style={{
                             flex: 1,
-                            fontSize: Math.sqrt(16 * 16),
+                            fontSize: 18,
                             marginVertical: 5,
                             marginLeft: 2,
                             paddingVertical: 5,
-                            color: item.name === "瓦斯費" ? color.secondary : color.dark,
+                            fontWeight:
+                              item.name === _.get(this.state, "selectedSpendingLabel.name") ? "bold" : "normal",
+                            color:
+                              item.name === _.get(this.state, "selectedSpendingLabel.name")
+                                ? color.secondary
+                                : color.dark,
                           }}
                         >
                           {item.name}
@@ -107,4 +122,6 @@ export class AddSpending extends Component {
   }
 }
 
-export default AddSpending;
+export default connect((state: AppState) => ({
+  spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
+}))(AddSpending);
