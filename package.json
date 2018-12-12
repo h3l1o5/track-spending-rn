@@ -8,13 +8,19 @@
     "prettier": "prettier --write 'src/**/*.tsx'"
   },
   "dependencies": {
+    "immer": "^1.8.2",
     "lodash": "^4.17.11",
     "native-base": "^2.8.1",
     "react": "16.6.1",
     "react-native": "0.57.7",
     "react-native-firebase": "^5.1.1",
     "react-native-gesture-handler": "^1.0.10",
-    "react-navigation": "^3.0.6"
+    "react-navigation": "^3.0.6",
+    "react-redux": "^6.0.0",
+    "redux": "^4.0.1",
+    "redux-observable": "^1.0.0",
+    "redux-persist": "^5.10.0",
+    "rxjs": "^6.3.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",
@@ -23,13 +29,17 @@
     "@types/react": "^16.7.13",
     "@types/react-native": "^0.57.15",
     "@types/react-navigation": "^2.13.7",
+    "@types/react-redux": "^6.0.11",
     "@types/react-test-renderer": "^16.0.3",
+    "@types/redux-persist": "^4.3.1",
+    "@types/remote-redux-devtools": "^0.5.3",
     "babel-jest": "23.6.0",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.50.0",
     "prettier": "^1.15.3",
     "react-native-typescript-transformer": "^1.2.10",
     "react-test-renderer": "16.6.1",
+    "remote-redux-devtools": "^0.5.14",
     "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.1",
