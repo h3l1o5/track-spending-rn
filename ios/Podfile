@@ -9,5 +9,5 @@ target 'TrackSpending' do
   pod 'Firebase/Core', '~> 5.11.0'
   pod 'Firebase/Auth', '~> 5.11.0'
   pod 'Firebase/Firestore', '~> 5.11.0'
-
+  
 end
