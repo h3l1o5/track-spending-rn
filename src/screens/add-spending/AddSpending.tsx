@@ -1,7 +1,8 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 import { Content, Text, View, Button, Icon } from "native-base";
 import { connect } from "react-redux";
+import Permissions from "react-native-permissions";
 import _ from "lodash";
 
 import NumberPad from "../../components/NumberPad";
@@ -15,14 +16,28 @@ interface Props {
 }
 interface State {
   spending: number;
-  selectedSpendingLabel: SpendingLabel | null;
+  selectedSpendingLabel?: SpendingLabel | null;
+  position: Position | null;
 }
 
 export class AddSpending extends Component<Props, State> {
   public state: State = {
     spending: 0,
     selectedSpendingLabel: null,
+    position: null,
   };
+
+  public async componentDidMount() {
+    const locationPermission = await Permissions.check("location");
+
+    if (locationPermission !== "authorized") {
+      Permissions.request("location");
+    } else {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.setState({ position });
+      });
+    }
+  }
 
   public componentDidUpdate() {
     if (this.props.spendingLabels && !this.state.selectedSpendingLabel) {
@@ -46,6 +61,14 @@ export class AddSpending extends Component<Props, State> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "flex-end" }}>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            {this.state.position && (
+              <Fragment>
+                <Text>{this.state.position.coords.latitude}</Text>
+                <Text>{this.state.position.coords.longitude}</Text>
+              </Fragment>
+            )}
+          </View>
           <View style={{ marginHorizontal: 10, marginVertical: 0 }}>
             <View
               style={{
