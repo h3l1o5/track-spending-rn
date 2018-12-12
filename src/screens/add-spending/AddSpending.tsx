@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 import { Content, Text, View, Button, Icon } from "native-base";
 import { connect } from "react-redux";
@@ -7,7 +7,7 @@ import _ from "lodash";
 import NumberPad from "../../components/NumberPad";
 import color from "../../theme/color";
 import { AppState, SpendingLabel } from "../../typings";
-import { getCategoryMandarin, getCategoryIcon, getPermission } from "../../utils";
+import { getCategoryMandarin, getCategoryIcon } from "../../utils";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import InfoPanel from "./InfoPanel";
 
@@ -50,7 +50,7 @@ export class AddSpending extends Component<Props, State> {
       <SafeAreaView style={{ flex: 1 }}>
         <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "flex-end" }}>
           <InfoPanel />
-          <View style={{ marginHorizontal: 10, marginVertical: 0 }}>
+          <View style={{ marginHorizontal: 10 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -77,10 +77,10 @@ export class AddSpending extends Component<Props, State> {
               </Button>
             </View>
             <View style={{ flexDirection: "row" }}>
-              <View style={{ flex: 2, borderRightWidth: 4, borderRightColor: color.primary }}>
+              <View style={{ flex: 2, borderRightWidth: 4, borderRightColor: color.primary, marginVertical: 15 }}>
                 <FlatList
                   showsVerticalScrollIndicator={false}
-                  style={{ flex: 1, marginBottom: 10, marginHorizontal: 7, paddingTop: 10 }}
+                  style={{ flex: 1, marginHorizontal: 7 }}
                   data={_.map(spendingLabels, spendingLabel => ({
                     ...spendingLabel,
                     categoryMandarin: getCategoryMandarin(spendingLabel.category),
