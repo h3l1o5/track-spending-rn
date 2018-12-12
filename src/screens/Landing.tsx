@@ -4,7 +4,7 @@ import { NavigationScreenProp } from "react-navigation";
 import { firestore, auth } from "react-native-firebase";
 import _ from "lodash";
 
-import { DEFAULT_LABELS } from "../util";
+import { DEFAULT_SPENDING_LABELS } from "../constants";
 import { connect } from "react-redux";
 import { spendingLabelActionCreators } from "../redux/reducers/spending-label.reducer";
 
@@ -35,16 +35,17 @@ export class Landing extends Component<Props> {
           if (!userDoc.exists) {
             transaction.set(userDocRef, { createdAt: new Date() });
 
-            _.forEach(DEFAULT_LABELS, defaultLabel => {
+            _.forEach(DEFAULT_SPENDING_LABELS, defaultSpendingLabel => {
               const spendingLabelDocRef = firestore()
                 .collection(`user/${userUid}/spendingLabel`)
-                .doc(`${defaultLabel.category}_${defaultLabel.name}`);
+                .doc(`${defaultSpendingLabel.category}_${defaultSpendingLabel.name}`);
 
-              transaction.set(spendingLabelDocRef, { ...defaultLabel, createdAt: new Date() });
+              transaction.set(spendingLabelDocRef, { ...defaultSpendingLabel, createdAt: new Date() });
             });
+          } else {
+            // transaction must do something or it will be broken??
+            transaction.set(userDocRef, {}, { merge: true });
           }
-          // transaction must do something or it will be broken??
-          transaction.set(userDocRef, {}, { merge: true });
         });
       });
     } catch (error) {

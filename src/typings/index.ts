@@ -1,4 +1,5 @@
 export type Category = "food" | "clothing" | "housing" | "transportation" | "education" | "entertainment" | "other";
+export type PermissionStatus = "undetermined" | "authorized" | "denied" | "restricted";
 
 export interface SpendingLabel {
   category: Category;

@@ -11,7 +11,7 @@ const styles: any = StyleSheet.create({
     justifyContent: "space-between",
   },
   button: {
-    margin: 6,
+    margin: 3,
     flex: 1,
     justifyContent: "center",
     backgroundColor: color.secondary,

@@ -1,6 +1,6 @@
 import { SpendingLabel } from "../typings";
 
-const DEFAULT_LABELS: SpendingLabel[] = [
+const DEFAULT_SPENDING_LABELS: SpendingLabel[] = [
   { category: "food", name: "早餐" },
   { category: "food", name: "午餐" },
   { category: "food", name: "晚餐" },
@@ -20,4 +20,4 @@ const DEFAULT_LABELS: SpendingLabel[] = [
   { category: "other", name: "悠遊卡" },
 ];
 
-export default DEFAULT_LABELS;
+export default DEFAULT_SPENDING_LABELS;

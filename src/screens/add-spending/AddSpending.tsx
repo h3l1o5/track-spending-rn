@@ -2,14 +2,14 @@ import React, { Component, Fragment } from "react";
 import { SafeAreaView, FlatList, TouchableOpacity } from "react-native";
 import { Content, Text, View, Button, Icon } from "native-base";
 import { connect } from "react-redux";
-import Permissions from "react-native-permissions";
 import _ from "lodash";
 
 import NumberPad from "../../components/NumberPad";
 import color from "../../theme/color";
 import { AppState, SpendingLabel } from "../../typings";
-import { getCategoryMandarin, getCategoryIcon } from "../../util";
+import { getCategoryMandarin, getCategoryIcon, getPermission } from "../../utils";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
+import InfoPanel from "./InfoPanel";
 
 interface Props {
   spendingLabels: SpendingLabel[] | null;
@@ -26,18 +26,6 @@ export class AddSpending extends Component<Props, State> {
     selectedSpendingLabel: null,
     position: null,
   };
-
-  public async componentDidMount() {
-    const locationPermission = await Permissions.check("location");
-
-    if (locationPermission !== "authorized") {
-      Permissions.request("location");
-    } else {
-      navigator.geolocation.getCurrentPosition(position => {
-        this.setState({ position });
-      });
-    }
-  }
 
   public componentDidUpdate() {
     if (this.props.spendingLabels && !this.state.selectedSpendingLabel) {
@@ -61,14 +49,7 @@ export class AddSpending extends Component<Props, State> {
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "flex-end" }}>
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            {this.state.position && (
-              <Fragment>
-                <Text>{this.state.position.coords.latitude}</Text>
-                <Text>{this.state.position.coords.longitude}</Text>
-              </Fragment>
-            )}
-          </View>
+          <InfoPanel />
           <View style={{ marginHorizontal: 10, marginVertical: 0 }}>
             <View
               style={{
