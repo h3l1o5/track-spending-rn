@@ -11,6 +11,7 @@
     "immer": "^1.8.2",
     "lodash": "^4.17.11",
     "native-base": "^2.8.1",
+    "normalizr": "^3.3.0",
     "react": "16.6.1",
     "react-native": "0.57.7",
     "react-native-firebase": "^5.1.1",
@@ -19,7 +20,6 @@
     "react-redux": "^6.0.0",
     "redux": "^4.0.1",
     "redux-observable": "^1.0.0",
-    "redux-persist": "^5.10.0",
     "rxjs": "^6.3.3"
   },
   "devDependencies": {
@@ -31,7 +31,6 @@
     "@types/react-navigation": "^2.13.7",
     "@types/react-redux": "^6.0.11",
     "@types/react-test-renderer": "^16.0.3",
-    "@types/redux-persist": "^4.3.1",
     "@types/remote-redux-devtools": "^0.5.3",
     "babel-jest": "23.6.0",
     "jest": "23.6.0",
