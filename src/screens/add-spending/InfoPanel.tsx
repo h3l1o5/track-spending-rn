@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 import { Text, View } from "native-base";
+import { NavigationScreenProp } from "react-navigation";
+import { Region } from "react-native-maps";
+import _ from "lodash";
+
 import color from "../../theme/color";
 import { SpendingLabel } from "../../typings";
-import _ from "lodash";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 
 const styles = StyleSheet.create({
@@ -13,13 +16,16 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   selectedLabel?: SpendingLabel;
+  position?: { latitude: number; longitude: number };
+  onPositionChanged: (position: { latitude: number; longitude: number }) => void;
   style?: StyleProp<ViewStyle>;
 }
 
 export class InfoPanel extends Component<Props> {
   public render() {
-    const { selectedLabel, style } = this.props;
+    const { selectedLabel, position, onPositionChanged, style } = this.props;
 
     const labelCategory = selectedLabel
       ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)}`
@@ -56,8 +62,17 @@ export class InfoPanel extends Component<Props> {
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>經度:120.243 | 緯度: 21.335</Text>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("Map", {
+                  initialPosition: position,
+                  onPositionChanged,
+                })
+              }
+            >
+              <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>
+                {position ? `經度: ${position.longitude.toFixed(3)} | 緯度: ${position.latitude.toFixed(3)}` : "未設定"}
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.itemContainer}>

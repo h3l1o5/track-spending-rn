@@ -18,7 +18,6 @@ export default createBottomTabNavigator(
         tabBarIcon: ({ tintColor }: { tintColor: string }) => (
           <Icon type="MaterialIcons" name="add-circle" style={{ color: tintColor }} />
         ),
-        tabBarVisible: navigation.state.index === 0,
       }),
     },
     History: {
@@ -28,7 +27,6 @@ export default createBottomTabNavigator(
         tabBarIcon: ({ tintColor }: { tintColor: string }) => (
           <Icon type="FontAwesome" name="book" style={{ color: tintColor }} />
         ),
-        tabBarVisible: navigation.state.index === 0,
       }),
     },
     Stats: {
@@ -38,7 +36,6 @@ export default createBottomTabNavigator(
         tabBarIcon: ({ tintColor }: { tintColor: string }) => (
           <Icon type="FontAwesome" name="pie-chart" style={{ color: tintColor }} />
         ),
-        tabBarVisible: navigation.state.index === 0,
       }),
     },
     Setting: {
@@ -48,7 +45,6 @@ export default createBottomTabNavigator(
         tabBarIcon: ({ tintColor }: { tintColor: string }) => (
           <Icon type="Ionicons" name="md-settings" style={{ color: tintColor }} />
         ),
-        tabBarVisible: navigation.state.index === 0,
       }),
     },
   },

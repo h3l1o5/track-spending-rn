@@ -12,7 +12,7 @@ export default async (type: "location"): Promise<PermissionStatus | {}> => {
       }
 
       if (currentStatus === "denied") {
-        return Alert.alert("我們可以取得您的位置嗎?", "為了把消費位置設定為您目前的位置，我們需要取得此權限", [
+        return Alert.alert("我們可以取得您的位置嗎?", "我們需要您的授權才可以取得您目前的位置", [
           {
             text: "拒絕",
             onPress: () => resolve(currentStatus),
@@ -43,7 +43,7 @@ export default async (type: "location"): Promise<PermissionStatus | {}> => {
       }
 
       if (currentStatus === "undetermined") {
-        return Alert.alert("我們可以取得您的位置嗎?", "為了把消費位置設定為您目前的位置，我們需要取得此權限", [
+        return Alert.alert("我們可以取得您的位置嗎?", "我們需要您的授權才可以取得您目前的位置", [
           {
             text: "拒絕",
             onPress: () => resolve(currentStatus),
