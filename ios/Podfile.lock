@@ -135,7 +135,7 @@ PODS:
   - gRPC/Main (1.17.0):
     - gRPC-Core (= 1.17.0)
     - gRPC-RxLibrary (= 1.17.0)
-  - GTMSessionFetcher/Core (1.2.0)
+  - GTMSessionFetcher/Core (1.2.1)
   - leveldb-library (1.20)
   - nanopb (0.3.901):
     - nanopb/decode (= 0.3.901)
@@ -206,6 +206,7 @@ DEPENDENCIES:
   - Folly (from `../node_modules/react-native/third-party-podspecs/Folly.podspec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - Google-Maps-iOS-Utils
+  - GoogleAppMeasurement (~> 5.3.0)
   - GoogleMaps
   - react-native-google-maps (from `../node_modules/react-native-maps`)
   - react-native-maps (from `../node_modules/react-native-maps`)
@@ -287,7 +288,7 @@ SPEC CHECKSUMS:
   gRPC-Core: 4028031ed2c5267cca0d846c876d8046b1ecb9b6
   gRPC-ProtoRPC: 94e90774dd0dc089dece93ec22384d8383988f3f
   gRPC-RxLibrary: f2873a17e8133f66d8ce972f8805aa7a518ae974
-  GTMSessionFetcher: 0c4baf0a73acd0041bf9f71ea018deedab5ea84e
+  GTMSessionFetcher: 32aeca0aa144acea523e1c8e053089dec2cb98ca
   leveldb-library: 08cba283675b7ed2d99629a4bc5fd052cd2bb6a5
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   Protobuf: 1eb9700044745f00181c136ef21b8ff3ad5a0fd5
@@ -296,6 +297,6 @@ SPEC CHECKSUMS:
   react-native-maps: 066c2afcc89e18726377bcc685315f989ca22449
   yoga: b1ce48b6cf950b98deae82838f5173ea7cf89e85
 
-PODFILE CHECKSUM: bfc4081027cdefedf5b928a27ed42017ed42af5f
+PODFILE CHECKSUM: 2619e9f6e272353336615d5a50eaf2914042af26
 
 COCOAPODS: 1.5.3
