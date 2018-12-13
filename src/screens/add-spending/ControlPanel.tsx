@@ -14,6 +14,7 @@ interface Props {
   selectedLabelId?: string;
   onLabelSelected: (labelId: string) => void;
   onSpendingChanged: (spending: number) => void;
+  onSubmit: () => void;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -29,7 +30,7 @@ export class ControlPanel extends Component<Props> {
   };
 
   public render() {
-    const { spending, labels, selectedLabelId, onLabelSelected, style } = this.props;
+    const { spending, labels, selectedLabelId, onLabelSelected, onSubmit, style } = this.props;
 
     return (
       <View style={style}>
@@ -54,6 +55,7 @@ export class ControlPanel extends Component<Props> {
               borderRadius: 0,
               backgroundColor: color.primary,
             }}
+            onPress={onSubmit}
           >
             <Icon type="Feather" name="check" style={{ color: color.light }} />
           </Button>

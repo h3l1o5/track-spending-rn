@@ -47,10 +47,8 @@ export class Map extends Component<Props> {
   public render() {
     const { region } = this.state;
     const { navigation } = this.props;
-    const onPositionChanged = navigation.getParam("onPositionChanged");
-    const initialPosition = navigation.getParam("initialPosition");
-    // FIXME: latitudeDelta and longitudeDelta have problem
-    const initialRegion = initialPosition ? { ...initialPosition, latitudeDelta: 10, longitudeDelta: 10 } : undefined;
+    const onRegionChanged = navigation.getParam("onRegionChanged");
+    const initialRegion = navigation.getParam("initialRegion");
 
     return (
       <View style={{ flex: 1 }}>
@@ -85,10 +83,7 @@ export class Map extends Component<Props> {
           small
           style={{ position: "absolute", bottom: 30, alignSelf: "center", zIndex: 100, backgroundColor: color.primary }}
           onPress={() => {
-            onPositionChanged({
-              latitude: _.get(region, "latitude"),
-              longitude: _.get(region, "longitude"),
-            });
+            onRegionChanged(region);
             navigation.goBack();
           }}
         >

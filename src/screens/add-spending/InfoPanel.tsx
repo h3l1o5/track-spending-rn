@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
-import { Text, View } from "native-base";
+import { Text, View, Input } from "native-base";
 import { NavigationScreenProp } from "react-navigation";
 import { Region } from "react-native-maps";
 import _ from "lodash";
@@ -15,17 +15,26 @@ const styles = StyleSheet.create({
   content: { fontSize: 18, color: color.dark },
 });
 
+interface State {
+  isEditingComment: boolean;
+}
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   selectedLabel?: SpendingLabel;
-  position?: { latitude: number; longitude: number };
-  onPositionChanged: (position: { latitude: number; longitude: number }) => void;
+  region?: Region;
+  onRegionChanged: (region: Region) => void;
+  comment?: string;
+  onCommentChanged: (comment: string) => void;
   style?: StyleProp<ViewStyle>;
 }
 
 export class InfoPanel extends Component<Props> {
+  public state: State = {
+    isEditingComment: false,
+  };
+
   public render() {
-    const { selectedLabel, position, onPositionChanged, style } = this.props;
+    const { selectedLabel, region, onRegionChanged, comment, onCommentChanged, style } = this.props;
 
     const labelCategory = selectedLabel
       ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)}`
@@ -45,11 +54,15 @@ export class InfoPanel extends Component<Props> {
         >
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
             <Text style={styles.title}>類型</Text>
-            <Text style={styles.content}>{labelCategory}</Text>
+            <Text numberOfLines={1} style={styles.content}>
+              {labelCategory}
+            </Text>
           </View>
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
             <Text style={styles.title}>標籤</Text>
-            <Text style={styles.content}>{labelName}</Text>
+            <Text numberOfLines={1} style={styles.content}>
+              {labelName}
+            </Text>
           </View>
         </View>
         <View style={{ flex: 7, paddingTop: 20 }}>
@@ -65,21 +78,42 @@ export class InfoPanel extends Component<Props> {
             <TouchableOpacity
               onPress={() =>
                 this.props.navigation.navigate("Map", {
-                  initialPosition: position,
-                  onPositionChanged,
+                  initialRegion: region,
+                  onRegionChanged,
                 })
               }
             >
               <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>
-                {position ? `經度: ${position.longitude.toFixed(3)} | 緯度: ${position.latitude.toFixed(3)}` : "未設定"}
+                {region ? `經度: ${region.longitude.toFixed(3)} | 緯度: ${region.latitude.toFixed(3)}` : "未設定"}
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.itemContainer}>
             <Text style={styles.title}>備註</Text>
-            <TouchableOpacity>
-              <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>無</Text>
-            </TouchableOpacity>
+            {this.state.isEditingComment ? (
+              <Input
+                defaultValue={comment}
+                onEndEditing={event => {
+                  onCommentChanged(event.nativeEvent.text);
+                  this.setState({ isEditingComment: false });
+                }}
+                autoFocus
+                style={[
+                  styles.content,
+                  {
+                    flex: undefined,
+                    height: "auto",
+                    width: "100%",
+                    paddingLeft: 10,
+                    color: color.gray,
+                  },
+                ]}
+              />
+            ) : (
+              <TouchableOpacity onPress={() => this.setState({ isEditingComment: true })}>
+                <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>{comment || "無"}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
       </View>

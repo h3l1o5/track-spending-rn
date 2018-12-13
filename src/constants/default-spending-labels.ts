@@ -18,6 +18,7 @@ const DEFAULT_SPENDING_LABELS: SpendingLabel[] = [
   { category: "education", name: "書" },
   { category: "entertainment", name: "電話費" },
   { category: "other", name: "悠遊卡" },
+  { category: "other", name: "看醫生" },
 ];
 
 export default DEFAULT_SPENDING_LABELS;
