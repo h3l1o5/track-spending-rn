@@ -1,7 +1,10 @@
 import React, { Component } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { Content, Text, View, Button, Icon } from "native-base";
+import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
+import { Text, View } from "native-base";
 import color from "../../theme/color";
+import { SpendingLabel } from "../../typings";
+import _ from "lodash";
+import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 
 const styles = StyleSheet.create({
   itemContainer: { flex: 1, justifyContent: "space-around" },
@@ -9,10 +12,22 @@ const styles = StyleSheet.create({
   content: { fontSize: 18, color: color.dark },
 });
 
-export class InfoPanel extends Component {
+interface Props {
+  selectedLabel?: SpendingLabel;
+  style?: StyleProp<ViewStyle>;
+}
+
+export class InfoPanel extends Component<Props> {
   public render() {
+    const { selectedLabel, style } = this.props;
+
+    const labelCategory = selectedLabel
+      ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)}`
+      : "";
+    const labelName = selectedLabel ? selectedLabel.name : "";
+
     return (
-      <View style={{ flex: 1, flexDirection: "column", padding: 15 }}>
+      <View style={[{ flex: 1, flexDirection: "column" }, style]}>
         <View
           style={{
             flex: 3,
@@ -24,11 +39,11 @@ export class InfoPanel extends Component {
         >
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
             <Text style={styles.title}>類型</Text>
-            <Text style={styles.content}>👕衣</Text>
+            <Text style={styles.content}>{labelCategory}</Text>
           </View>
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
             <Text style={styles.title}>標籤</Text>
-            <Text style={styles.content}>衣服</Text>
+            <Text style={styles.content}>{labelName}</Text>
           </View>
         </View>
         <View style={{ flex: 7, paddingTop: 20 }}>
