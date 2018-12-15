@@ -10,6 +10,7 @@ import color from "../../theme/color";
 import { getPermission } from "../../utils";
 import { AppState, PermissionStatus } from "../../typings";
 import { permissionSelectors } from "../../redux/reducers/permission.reducer";
+import { DEVICE_HEIGHT_WITH_TABBAR } from "../../constants";
 
 interface State {
   region: Region | null;
@@ -30,9 +31,14 @@ export class ChooseLocation extends Component<Props> {
       navigator.geolocation.getCurrentPosition(
         position => {
           if (this.mapRef) {
-            this.mapRef.animateToCoordinate(
-              { latitude: position.coords.latitude, longitude: position.coords.longitude },
-              500
+            this.mapRef.animateToRegion(
+              {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: 0.0005,
+                longitudeDelta: 0.0005,
+              },
+              1000
             );
           }
         },
@@ -45,9 +51,14 @@ export class ChooseLocation extends Component<Props> {
         navigator.geolocation.getCurrentPosition(
           position => {
             if (this.mapRef) {
-              this.mapRef.animateToCoordinate(
-                { latitude: position.coords.latitude, longitude: position.coords.longitude },
-                500
+              this.mapRef.animateToRegion(
+                {
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  latitudeDelta: 0.0005,
+                  longitudeDelta: 0.0005,
+                },
+                1000
               );
             }
           },
@@ -61,7 +72,12 @@ export class ChooseLocation extends Component<Props> {
     const { region } = this.state;
     const { navigation } = this.props;
     const onRegionChanged = navigation.getParam("onRegionChanged");
-    const initialRegion = navigation.getParam("initialRegion");
+    const initialRegion = navigation.getParam("initialRegion") || {
+      latitude: 24,
+      longitude: 121,
+      latitudeDelta: 2,
+      longitudeDelta: 2,
+    };
 
     return (
       <View style={{ flex: 1 }}>
@@ -79,7 +95,7 @@ export class ChooseLocation extends Component<Props> {
             color: color.red,
             fontSize: 40,
             position: "absolute",
-            bottom: "50%",
+            top: DEVICE_HEIGHT_WITH_TABBAR / 2 - 40,
             alignSelf: "center",
           }}
         />

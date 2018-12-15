@@ -8,6 +8,7 @@ import AddSpendingNavigator from "./add-spending/AddSpendingNavigator";
 import HistoryNavigator from "./history/HistoryNavigator";
 import StatsNavigator from "./stats/StatsNavigator";
 import SettingNavigator from "./setting/SettingNavigator";
+import { TABBAR_HEIGHT } from "../constants";
 
 export default createBottomTabNavigator(
   {
@@ -53,7 +54,7 @@ export default createBottomTabNavigator(
       inactiveTintColor: color.dark,
       activeTintColor: color.secondary,
       tabStyle: { marginVertical: 4 },
-      style: { height: 55, backgroundColor: color.light },
+      style: { height: TABBAR_HEIGHT, backgroundColor: color.light },
     },
   }
 );
