@@ -3,7 +3,9 @@ import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native
 import { Text, View, Input } from "native-base";
 import { NavigationScreenProp } from "react-navigation";
 import { Region } from "react-native-maps";
+import DateTimePicker from "react-native-modal-datetime-picker";
 import _ from "lodash";
+import moment from "moment";
 
 import color from "../../theme/color";
 import { SpendingLabel } from "../../typings";
@@ -17,10 +19,13 @@ const styles = StyleSheet.create({
 
 interface State {
   isEditingComment: boolean;
+  isDateTimePickerVisible: boolean;
 }
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   selectedLabel?: SpendingLabel;
+  time: Date;
+  onTimeChanged: (time: Date) => void;
   region?: Region;
   onRegionChanged: (region: Region) => void;
   comment?: string;
@@ -31,15 +36,34 @@ interface Props {
 export class InfoPanel extends Component<Props> {
   public state: State = {
     isEditingComment: false,
+    isDateTimePickerVisible: false,
   };
 
   public render() {
-    const { selectedLabel, region, onRegionChanged, comment, onCommentChanged, style } = this.props;
+    const {
+      selectedLabel,
+      time,
+      onTimeChanged,
+      region,
+      onRegionChanged,
+      comment,
+      onCommentChanged,
+      style,
+    } = this.props;
 
     const labelCategory = selectedLabel
       ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)}`
       : "";
     const labelName = selectedLabel ? selectedLabel.name : "";
+
+    const timeDisplayText =
+      moment(time).format("YYYYMMDD") === moment().format("YYYYMMDD")
+        ? "今天"
+        : moment(time)
+            .add("1", "days")
+            .format("YYYYMMDD") === moment().format("YYYYMMDD")
+        ? "昨天"
+        : moment(time).format("YYYY年M月D號");
 
     return (
       <View style={[{ flex: 1, flexDirection: "column" }, style]}>
@@ -53,16 +77,18 @@ export class InfoPanel extends Component<Props> {
           }}
         >
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
-            <Text style={styles.title}>類型</Text>
+            <Text style={styles.title}>消費項目</Text>
             <Text numberOfLines={1} style={styles.content}>
-              {labelCategory}
+              {labelCategory} | {labelName}
             </Text>
           </View>
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
-            <Text style={styles.title}>標籤</Text>
-            <Text numberOfLines={1} style={styles.content}>
-              {labelName}
-            </Text>
+            <Text style={styles.title}>時間</Text>
+            <TouchableOpacity onPress={() => this.setState({ isDateTimePickerVisible: true })}>
+              <Text numberOfLines={1} style={[styles.content, { color: color.gray }]}>
+                {timeDisplayText}
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
         <View style={{ flex: 7, paddingTop: 20 }}>
@@ -116,6 +142,25 @@ export class InfoPanel extends Component<Props> {
             )}
           </View>
         </View>
+        <DateTimePicker
+          isVisible={this.state.isDateTimePickerVisible}
+          date={time}
+          onConfirm={date => {
+            onTimeChanged(
+              moment(date)
+                .startOf("day")
+                .add("12", "hours")
+                .toDate()
+            );
+            this.setState({ isDateTimePickerVisible: false });
+          }}
+          onCancel={() => this.setState({ isDateTimePickerVisible: false })}
+          mode="date"
+          maximumDate={new Date()}
+          titleIOS="選擇日期"
+          confirmTextIOS="選擇"
+          cancelTextIOS="取消"
+        />
       </View>
     );
   }
