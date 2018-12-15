@@ -11,6 +11,9 @@ export interface SpendingLabel {
 }
 
 export interface AppState {
+  setting: {
+    autoLocateEnabled: boolean;
+  };
   permission: {
     location: PermissionStatus | null;
   };

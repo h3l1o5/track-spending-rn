@@ -29,6 +29,7 @@ export class Landing extends Component<Props> {
 
   private preparePermission = async () => {
     const handleAppStateChange = async (nextAppState: "active" | "background" | "inactive") => {
+      console.log("state change: ", nextAppState);
       if (nextAppState === "active") {
         try {
           const locationPermission = await Permissions.check("location");

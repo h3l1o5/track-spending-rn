@@ -1,29 +1,29 @@
 import { AsyncStorage } from "react-native";
 import { createStore, applyMiddleware } from "redux";
-import { persistCombineReducers, persistStore } from "redux-persist";
+import { persistStore, persistReducer } from "redux-persist";
 import { createEpicMiddleware, combineEpics } from "redux-observable";
 import { composeWithDevTools } from "remote-redux-devtools";
 
-import reducers from "./reducers";
-import epics from "./epics";
+import rootReducer from "./reducers";
+import rootEpic from "./epics";
 
-const rootReducer = persistCombineReducers(
+const rootReducerWithPersist = persistReducer(
   {
     key: "root",
     storage: AsyncStorage,
-    whitelist: [],
+    whitelist: ["setting"],
   },
-  reducers
+  rootReducer
 );
 
 const epicMiddleware = createEpicMiddleware();
 const middlewares = [epicMiddleware];
 
 const store = createStore(
-  rootReducer,
+  rootReducerWithPersist,
   __DEV__ ? composeWithDevTools(applyMiddleware(...middlewares)) : applyMiddleware(...middlewares)
 );
 
-epicMiddleware.run(combineEpics(...epics));
+epicMiddleware.run(combineEpics(rootEpic));
 
 export default { store, persistor: persistStore(store) };

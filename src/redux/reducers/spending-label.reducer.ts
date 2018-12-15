@@ -2,6 +2,7 @@ import { combineReducers } from "redux";
 import { produce } from "immer";
 import { normalize, schema } from "normalizr";
 import { SpendingLabel, AppState } from "../../typings";
+import _ from "lodash";
 
 const spendingLabel = new schema.Entity("spendingLabels");
 
@@ -60,5 +61,6 @@ export default combineReducers({
 
 export const spendingLabelSelectors = {
   getSpendingLabels: (state: AppState) =>
-    state.spendingLabel.ids !== null ? state.spendingLabel.ids.map(id => state.spendingLabel.byId[id]) : null,
+    // @ts-ignore
+    state.spendingLabel.ids ? state.spendingLabel.ids.map(id => state.spendingLabel.byId[id]) : null,
 };
