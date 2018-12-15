@@ -18,6 +18,7 @@
     "react-native-firebase": "^5.1.1",
     "react-native-gesture-handler": "^1.0.10",
     "react-native-maps": "^0.22.1",
+    "react-native-modal-datetime-picker": "^6.0.0",
     "react-native-permissions": "^1.1.1",
     "react-navigation": "^3.0.6",
     "react-redux": "^6.0.0",

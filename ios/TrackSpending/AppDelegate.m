@@ -19,6 +19,9 @@
 {
   [GMSServices provideAPIKey:@"AIzaSyApNDluHsXKotZVFcrW45BMayIahlAvO9k"];
   [FIRApp configure];
+
+  NSString *currentLanguage = [[NSLocale preferredLanguages] firstObject];
+  [[UIDatePicker appearance] setLocale:[[NSLocale alloc]initWithLocaleIdentifier:currentLanguage]];
   
   NSURL *jsCodeLocation;
 
