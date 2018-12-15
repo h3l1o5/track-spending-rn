@@ -1,3 +1,4 @@
+import permission from "./permission.reducer";
 import spendingLabel from "./spending-label.reducer";
 
-export default { spendingLabel };
+export default { permission, spendingLabel };

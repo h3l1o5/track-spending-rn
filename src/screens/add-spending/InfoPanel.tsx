@@ -77,7 +77,7 @@ export class InfoPanel extends Component<Props> {
             </View>
             <TouchableOpacity
               onPress={() =>
-                this.props.navigation.navigate("Map", {
+                this.props.navigation.navigate("ChooseLocation", {
                   initialRegion: region,
                   onRegionChanged,
                 })

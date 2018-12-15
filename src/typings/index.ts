@@ -11,8 +11,11 @@ export interface SpendingLabel {
 }
 
 export interface AppState {
+  permission: {
+    location: PermissionStatus | null;
+  };
   spendingLabel: {
-    ids: string[];
-    byId: { [id: string]: SpendingLabel };
+    ids: string[] | null;
+    byId: { [id: string]: SpendingLabel } | null;
   };
 }

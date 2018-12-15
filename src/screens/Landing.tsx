@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, AppState } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import { firestore, auth } from "react-native-firebase";
 import _ from "lodash";
@@ -7,21 +7,51 @@ import _ from "lodash";
 import { DEFAULT_SPENDING_LABELS } from "../constants";
 import { connect } from "react-redux";
 import { spendingLabelActionCreators } from "../redux/reducers/spending-label.reducer";
+import Permissions from "react-native-permissions";
+import { permissionActionCreators } from "../redux/reducers/permission.reducer";
+import { PermissionStatus } from "../typings";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
+  modifyLocationPermission: (status: PermissionStatus) => void;
   fetchSpendingLabels: (onSuccess: () => void) => void;
 }
 interface State {
   isSpendingLabelsReady: boolean;
+  isPermissionsCheck: boolean;
 }
 
 export class Landing extends Component<Props> {
   public state: State = {
     isSpendingLabelsReady: false,
+    isPermissionsCheck: false,
   };
 
-  public async componentDidMount() {
+  private preparePermission = async () => {
+    const handleAppStateChange = async (nextAppState: "active" | "background" | "inactive") => {
+      if (nextAppState === "active") {
+        try {
+          const locationPermission = await Permissions.check("location");
+          this.props.modifyLocationPermission(locationPermission);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    };
+
+    try {
+      // Run permission checker whenever App is back from background mode later.
+      AppState.addEventListener("change", handleAppStateChange);
+      // First time check
+      const locationPermission = await Permissions.check("location");
+      this.props.modifyLocationPermission(locationPermission);
+      this.setState({ isPermissionsCheck: true });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  private prepareSpendingLabels = async () => {
     try {
       const credential = await auth().signInAnonymously();
       const userUid = credential.user.uid;
@@ -48,14 +78,20 @@ export class Landing extends Component<Props> {
           }
         });
       });
+
+      this.props.fetchSpendingLabels(() => this.setState({ isSpendingLabelsReady: true }));
     } catch (error) {
       console.error(error);
     }
-    this.props.fetchSpendingLabels(() => this.setState({ isSpendingLabelsReady: true }));
+  };
+
+  public async componentDidMount() {
+    this.preparePermission();
+    this.prepareSpendingLabels();
   }
 
   public async componentDidUpdate() {
-    if (this.state.isSpendingLabelsReady) {
+    if (this.state.isSpendingLabelsReady && this.state.isPermissionsCheck) {
       this.props.navigation.navigate("Main");
     }
   }
@@ -71,5 +107,8 @@ export class Landing extends Component<Props> {
 
 export default connect(
   null,
-  { fetchSpendingLabels: spendingLabelActionCreators.fetchSpendingLabel }
+  {
+    modifyLocationPermission: permissionActionCreators.modifyLocationPermission,
+    fetchSpendingLabels: spendingLabelActionCreators.fetchSpendingLabel,
+  }
 )(Landing);
