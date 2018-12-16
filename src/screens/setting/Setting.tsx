@@ -8,6 +8,7 @@ import { AppState, PermissionStatus } from "../../typings";
 import { settingSelectors, settingActionCreators } from "../../redux/reducers/setting.reducer";
 import { permissionSelectors } from "../../redux/reducers/permission.reducer";
 import { getPermission } from "../../utils";
+import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 
 const styles = StyleSheet.create({
   itemIcon: { height: 30, width: 30, textAlign: "center", color: color.dark },
@@ -18,14 +19,21 @@ interface Props {
   locationPermission: PermissionStatus | null;
   isAutoLocateEnabled: boolean;
   setAutoLocate: (enabled: boolean) => void;
+  navigation: NavigationScreenProp<any, any>;
 }
 export class Setting extends Component<Props> {
+  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
+    title: "設定",
+    headerTitleStyle: { color: "transparent" },
+    headerTransparent: true,
+  });
+
   public render() {
     const { isAutoLocateEnabled, setAutoLocate } = this.props;
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Content>
+        <Content scrollEnabled={false}>
           <Text
             style={{
               paddingHorizontal: 20,
@@ -53,7 +61,12 @@ export class Setting extends Component<Props> {
                 />
               </Right>
             </ListItem>
-            <ListItem icon style={{ marginVertical: 10 }} button onPress={() => null}>
+            <ListItem
+              icon
+              style={{ marginVertical: 10 }}
+              button
+              onPress={() => this.props.navigation.navigate("LabelList")}
+            >
               <Left>
                 <Icon type="Feather" name="tag" style={styles.itemIcon} />
               </Left>
