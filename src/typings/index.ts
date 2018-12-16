@@ -2,12 +2,20 @@ export type Category = "food" | "clothing" | "housing" | "transportation" | "edu
 export type PermissionStatus = "undetermined" | "authorized" | "denied" | "restricted";
 
 export interface SpendingLabel {
+  id: string;
   category: Category;
   name: string;
-  categoryMandarin?: string;
-  categoryIcon?: string;
-  id?: string;
   createdAt?: Date;
+}
+
+export interface Consumption {
+  id: string;
+  spending: number;
+  selectedLabelId: string;
+  time: Date;
+  location: { latitude: number; longitude: number } | null;
+  comment: string | null;
+  createdAt: Date;
 }
 
 export interface AppState {
@@ -18,7 +26,11 @@ export interface AppState {
     location: PermissionStatus | null;
   };
   spendingLabel: {
-    ids: string[] | null;
-    byId: { [id: string]: SpendingLabel } | null;
+    ids: string[];
+    byId: { [id: string]: SpendingLabel };
+  };
+  consumption: {
+    ids: string[];
+    byId: { [id: string]: Consumption };
   };
 }

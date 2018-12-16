@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 import { Text, View, Input, ActionSheet } from "native-base";
 import { NavigationScreenProp } from "react-navigation";
-import { Region } from "react-native-maps";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import _ from "lodash";
 import moment from "moment";
@@ -26,9 +25,9 @@ interface Props {
   selectedLabel?: SpendingLabel;
   time: Date;
   onTimeChanged: (time: Date) => void;
-  region?: Region;
-  onRegionChanged: (region?: Region) => void;
-  comment?: string;
+  location: { latitude: number; longitude: number } | null;
+  onLocationChanged: (location: { latitude: number; longitude: number } | null) => void;
+  comment: string | null;
   onCommentChanged: (comment: string) => void;
   isAutoLocateEnabled: boolean;
   style?: StyleProp<ViewStyle>;
@@ -41,10 +40,10 @@ export class InfoPanel extends Component<Props> {
   };
 
   public handleLocationPressed = () => {
-    if (!this.props.region) {
+    if (!this.props.location) {
       return this.props.navigation.navigate("ChooseLocation", {
-        initialRegion: this.props.region,
-        onRegionChanged: this.props.onRegionChanged,
+        initialLocation: this.props.location,
+        onLocationChanged: this.props.onLocationChanged,
       });
     }
 
@@ -53,11 +52,11 @@ export class InfoPanel extends Component<Props> {
       buttonIndex =>
         buttonIndex === 0
           ? this.props.navigation.navigate("ChooseLocation", {
-              initialRegion: this.props.region,
-              onRegionChanged: this.props.onRegionChanged,
+              initialLocation: this.props.location,
+              onLocationChanged: this.props.onLocationChanged,
             })
           : buttonIndex === 1
-          ? this.props.onRegionChanged(undefined)
+          ? this.props.onLocationChanged(null)
           : null
     );
   };
@@ -67,7 +66,7 @@ export class InfoPanel extends Component<Props> {
       selectedLabel,
       time,
       onTimeChanged,
-      region,
+      location,
       comment,
       onCommentChanged,
       isAutoLocateEnabled,
@@ -88,8 +87,8 @@ export class InfoPanel extends Component<Props> {
         ? "昨天"
         : moment(time).format("YYYY年M月D號");
 
-    const locationDisplayText = region
-      ? `經度: ${region.longitude.toFixed(3)} | 緯度: ${region.latitude.toFixed(3)}`
+    const locationDisplayText = location
+      ? `經度: ${location.longitude.toFixed(3)} | 緯度: ${location.latitude.toFixed(3)}`
       : isAutoLocateEnabled
       ? "目前位置"
       : "未設定";
@@ -138,7 +137,7 @@ export class InfoPanel extends Component<Props> {
             <Text style={styles.title}>備註</Text>
             {this.state.isEditingComment ? (
               <Input
-                defaultValue={comment}
+                defaultValue={comment || ""}
                 onEndEditing={event => {
                   onCommentChanged(event.nativeEvent.text);
                   this.setState({ isEditingComment: false });

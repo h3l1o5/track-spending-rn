@@ -1,6 +1,8 @@
-import { SpendingLabel } from "../typings";
+import { SpendingLabel, Category } from "../typings";
+import _ from "lodash";
+import uuid from "uuid/v4";
 
-const DEFAULT_SPENDING_LABELS: SpendingLabel[] = [
+const DEFAULT_SPENDING_LABELS: Array<{ category: Category; name: string }> = [
   { category: "food", name: "早餐" },
   { category: "food", name: "午餐" },
   { category: "food", name: "晚餐" },
@@ -21,4 +23,9 @@ const DEFAULT_SPENDING_LABELS: SpendingLabel[] = [
   { category: "other", name: "看醫生" },
 ];
 
-export default DEFAULT_SPENDING_LABELS;
+export default (): SpendingLabel[] =>
+  _.map(DEFAULT_SPENDING_LABELS, label => ({
+    ...label,
+    id: uuid(),
+    createdAt: new Date(),
+  }));

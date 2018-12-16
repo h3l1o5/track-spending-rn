@@ -1,20 +1,19 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Text, View, AppState } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
-import { firestore, auth } from "react-native-firebase";
+import Permissions from "react-native-permissions";
 import _ from "lodash";
 
-import { DEFAULT_SPENDING_LABELS } from "../constants";
-import { connect } from "react-redux";
-import { spendingLabelActionCreators } from "../redux/reducers/spending-label.reducer";
-import Permissions from "react-native-permissions";
+import { spendingLabelActionCreators, spendingLabelSelectors } from "../redux/reducers/spending-label.reducer";
 import { permissionActionCreators } from "../redux/reducers/permission.reducer";
-import { PermissionStatus } from "../typings";
+import { PermissionStatus, AppState as _AppState, SpendingLabel } from "../typings";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   modifyLocationPermission: (status: PermissionStatus) => void;
-  fetchSpendingLabels: (onSuccess: () => void) => void;
+  createDefaultSpendingLabels: () => void;
+  spendingLabels: SpendingLabel[];
 }
 interface State {
   isSpendingLabelsReady: boolean;
@@ -52,38 +51,11 @@ export class Landing extends Component<Props> {
     }
   };
 
-  private prepareSpendingLabels = async () => {
-    try {
-      const credential = await auth().signInAnonymously();
-      const userUid = credential.user.uid;
-
-      await firestore().runTransaction(transaction => {
-        const userDocRef = firestore()
-          .collection("user")
-          .doc(userUid);
-
-        return transaction.get(userDocRef).then(userDoc => {
-          if (!userDoc.exists) {
-            transaction.set(userDocRef, { createdAt: new Date() });
-
-            _.forEach(DEFAULT_SPENDING_LABELS, defaultSpendingLabel => {
-              const spendingLabelDocRef = firestore()
-                .collection(`user/${userUid}/spendingLabel`)
-                .doc(`${defaultSpendingLabel.category}_${defaultSpendingLabel.name}`);
-
-              transaction.set(spendingLabelDocRef, { ...defaultSpendingLabel, createdAt: new Date() });
-            });
-          } else {
-            // transaction must do something or it will be broken??
-            transaction.set(userDocRef, {}, { merge: true });
-          }
-        });
-      });
-
-      this.props.fetchSpendingLabels(() => this.setState({ isSpendingLabelsReady: true }));
-    } catch (error) {
-      console.error(error);
+  private prepareSpendingLabels = () => {
+    if (this.props.spendingLabels.length === 0) {
+      this.props.createDefaultSpendingLabels();
     }
+    this.setState({ isSpendingLabelsReady: true });
   };
 
   public async componentDidMount() {
@@ -107,9 +79,11 @@ export class Landing extends Component<Props> {
 }
 
 export default connect(
-  null,
+  (state: _AppState) => ({
+    spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
+  }),
   {
     modifyLocationPermission: permissionActionCreators.modifyLocationPermission,
-    fetchSpendingLabels: spendingLabelActionCreators.fetchSpendingLabel,
+    createDefaultSpendingLabels: spendingLabelActionCreators.createDefaultSpendingLabels,
   }
 )(Landing);

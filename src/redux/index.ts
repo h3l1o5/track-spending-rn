@@ -7,11 +7,12 @@ import { composeWithDevTools } from "remote-redux-devtools";
 import rootReducer from "./reducers";
 import rootEpic from "./epics";
 
+// AsyncStorage.clear();
 const rootReducerWithPersist = persistReducer(
   {
     key: "root",
     storage: AsyncStorage,
-    whitelist: ["setting"],
+    whitelist: ["setting", "spendingLabel", "consumption"],
   },
   rootReducer
 );

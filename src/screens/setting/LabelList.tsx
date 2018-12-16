@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import { NavigationScreenConfig, NavigationScreenOptions } from "react-navigation";
-import { Content, List, ListItem, Icon, Left, Body, Right } from "native-base";
+import { Content, List, ListItem, Icon, Body, Right } from "native-base";
 import _ from "lodash";
 
 import color from "../../theme/color";
