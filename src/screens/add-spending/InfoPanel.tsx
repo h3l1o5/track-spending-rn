@@ -123,11 +123,9 @@ export class InfoPanel extends Component<Props> {
           <View style={styles.itemContainer}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={styles.title}>地點</Text>
-              <TouchableOpacity>
-                <View style={{ paddingLeft: 10, flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ color: "#5893d4" }}>(自動位置設定: {isAutoLocateEnabled ? "開啟" : "關閉"})</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={{ paddingLeft: 10, flexDirection: "row", alignItems: "center" }}>
+                <Text style={{ color: "#5893d4" }}>(自動位置設定: {isAutoLocateEnabled ? "開啟" : "關閉"})</Text>
+              </View>
             </View>
             <TouchableOpacity onPress={this.handleLocationPressed}>
               <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>{locationDisplayText}</Text>

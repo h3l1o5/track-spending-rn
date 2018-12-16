@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { View, Text, Button, Icon } from "native-base";
-import MapView, { PROVIDER_GOOGLE, Region } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { NavigationScreenProp } from "react-navigation";
 import _ from "lodash";
 
@@ -11,6 +10,7 @@ import { getPermission } from "../../utils";
 import { AppState, PermissionStatus } from "../../typings";
 import { permissionSelectors } from "../../redux/reducers/permission.reducer";
 import { DEVICE_HEIGHT_WITH_TABBAR } from "../../constants";
+import { settingSelectors } from "../../redux/reducers/setting.reducer";
 
 interface State {
   location: { latitude: number; longitude: number } | null;
@@ -18,6 +18,7 @@ interface State {
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   locationPermissionStatus: PermissionStatus | null;
+  isAutoLocateEnabled: boolean;
 }
 
 export class ChooseLocation extends Component<Props> {
@@ -25,6 +26,21 @@ export class ChooseLocation extends Component<Props> {
   public state: State = {
     location: null,
   };
+
+  public componentDidMount() {
+    if (this.props.isAutoLocateEnabled && this.props.locationPermissionStatus === "authorized") {
+      navigator.geolocation.getCurrentPosition(({ coords }) => {
+        if (this.mapRef) {
+          this.mapRef.animateToRegion({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+            latitudeDelta: 0.0005,
+            longitudeDelta: 0.0005,
+          });
+        }
+      });
+    }
+  }
 
   public handleFindmePressed = async () => {
     if (this.props.locationPermissionStatus === "authorized") {
@@ -140,6 +156,7 @@ export class ChooseLocation extends Component<Props> {
 
 export default connect(
   (state: AppState) => ({
+    isAutoLocateEnabled: settingSelectors.isAutoLocateEnabled(state),
     locationPermissionStatus: permissionSelectors.getLocationPermissionStatus(state),
   }),
   null
