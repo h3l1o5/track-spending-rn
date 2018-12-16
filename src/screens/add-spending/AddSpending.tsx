@@ -3,43 +3,50 @@ import { SafeAreaView } from "react-native";
 import { Content, Toast } from "native-base";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
-import { Region } from "react-native-maps";
-import firebase, { firestore } from "react-native-firebase";
 import moment from "moment";
 import _ from "lodash";
+import uuid from "uuid/v4";
 
-import { AppState, SpendingLabel } from "../../typings";
+import { AppState, SpendingLabel, Consumption } from "../../typings";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import InfoPanel from "./InfoPanel";
 import ControlPanel from "./ControlPanel";
 import { settingSelectors } from "../../redux/reducers/setting.reducer";
+import { consumptionActionCreators } from "../../redux/reducers/consumption.reducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
-  labels: SpendingLabel[] | null;
+  labels: SpendingLabel[];
   isAutoLocateEnabled: boolean;
+  createConsumption: (consumption: Consumption) => void;
 }
 interface State {
   spending: number;
-  selectedLabelId?: string;
+  selectedLabelId: string;
   time: Date;
-  region?: Region;
-  comment?: string;
+  location: { latitude: number; longitude: number } | null;
+  comment: string | null;
 }
 
 export class AddSpending extends Component<Props, State> {
-  public state: State = {
-    spending: 0,
-    selectedLabelId: undefined,
-    time: moment()
-      .startOf("day")
-      .add("12", "hours")
-      .toDate(),
-    region: undefined,
-    comment: undefined,
-  };
+  public state: State;
 
-  public componentDidUpdate() {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      spending: 0,
+      selectedLabelId: props.labels[0].id,
+      time: moment()
+        .startOf("day")
+        .add("12", "hours")
+        .toDate(),
+      location: null,
+      comment: null,
+    };
+  }
+
+  public componentDidMount() {
     if (this.props.labels && !this.state.selectedLabelId) {
       this.setState({ selectedLabelId: this.props.labels[0].id });
     }
@@ -57,30 +64,26 @@ export class AddSpending extends Component<Props, State> {
     this.setState({ time });
   };
 
-  public handleRegionChanged = (region?: Region) => {
-    this.setState({ region });
+  public handleLocationChanged = (location: { latitude: number; longitude: number } | null) => {
+    this.setState({ location });
   };
 
   public handleCommentChanged = (comment: string) => {
     this.setState({ comment });
   };
 
-  public handleSubmit = async () => {
+  public handleSubmit = () => {
     try {
-      const newConsumption = { ...this.state, createdAt: new Date() };
-      if (!this.state.region && this.props.isAutoLocateEnabled) {
-        navigator.geolocation.getCurrentPosition(async currentLocation => {
-          newConsumption.region = {
+      const newConsumption = { ...this.state, id: uuid(), createdAt: new Date() };
+      if (!this.state.location && this.props.isAutoLocateEnabled) {
+        navigator.geolocation.getCurrentPosition(currentLocation => {
+          newConsumption.location = {
             latitude: currentLocation.coords.latitude,
             longitude: currentLocation.coords.longitude,
-            latitudeDelta: 0.005,
-            longitudeDelta: 0.005,
           };
 
-          await firestore()
-            .collection(`user/${_.get(firebase.auth(), "currentUser.uid")}/consumption`)
-            .add(newConsumption);
-          this.setState({ spending: 0, comment: undefined });
+          this.props.createConsumption(newConsumption);
+          this.setState({ spending: 0, comment: null });
           Toast.show({
             type: "success",
             text: "新增消費紀錄成功✌️",
@@ -90,10 +93,8 @@ export class AddSpending extends Component<Props, State> {
           });
         });
       } else {
-        await firestore()
-          .collection(`user/${_.get(firebase.auth(), "currentUser.uid")}/consumption`)
-          .add({ ...this.state, createdAt: new Date() });
-        this.setState({ spending: 0, comment: undefined });
+        this.props.createConsumption(newConsumption);
+        this.setState({ spending: 0, comment: null });
         Toast.show({
           type: "success",
           text: "新增消費紀錄成功✌️",
@@ -108,7 +109,7 @@ export class AddSpending extends Component<Props, State> {
   };
 
   public render() {
-    const { spending, selectedLabelId, time, region, comment } = this.state;
+    const { spending, selectedLabelId, time, location, comment } = this.state;
     const labels = this.props.labels || [];
 
     return (
@@ -119,8 +120,8 @@ export class AddSpending extends Component<Props, State> {
             selectedLabel={_.find(labels, label => label.id === selectedLabelId)}
             time={time}
             onTimeChanged={this.handleTimeChanged}
-            region={region}
-            onRegionChanged={this.handleRegionChanged}
+            location={location}
+            onLocationChanged={this.handleLocationChanged}
             comment={comment}
             onCommentChanged={this.handleCommentChanged}
             isAutoLocateEnabled={this.props.isAutoLocateEnabled}
@@ -141,7 +142,12 @@ export class AddSpending extends Component<Props, State> {
   }
 }
 
-export default connect((state: AppState) => ({
-  isAutoLocateEnabled: settingSelectors.isAutoLocateEnabled(state),
-  labels: spendingLabelSelectors.getSpendingLabels(state),
-}))(AddSpending);
+export default connect(
+  (state: AppState) => ({
+    isAutoLocateEnabled: settingSelectors.isAutoLocateEnabled(state),
+    labels: spendingLabelSelectors.getSpendingLabels(state),
+  }),
+  {
+    createConsumption: consumptionActionCreators.createConsumption,
+  }
+)(AddSpending);

@@ -9,6 +9,7 @@
     "postinstall": "cd ios && pod install"
   },
   "dependencies": {
+    "@types/uuid": "^3.4.4",
     "immer": "^1.8.2",
     "lodash": "^4.17.11",
     "moment": "^2.23.0",
@@ -26,7 +27,8 @@
     "redux": "^4.0.1",
     "redux-observable": "^1.0.0",
     "redux-persist": "^5.10.0",
-    "rxjs": "^6.3.3"
+    "rxjs": "^6.3.3",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-0",

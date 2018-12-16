@@ -13,7 +13,7 @@ import { permissionSelectors } from "../../redux/reducers/permission.reducer";
 import { DEVICE_HEIGHT_WITH_TABBAR } from "../../constants";
 
 interface State {
-  region: Region | null;
+  location: { latitude: number; longitude: number } | null;
 }
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -23,7 +23,7 @@ interface Props {
 export class ChooseLocation extends Component<Props> {
   public mapRef?: MapView | null;
   public state: State = {
-    region: null,
+    location: null,
   };
 
   public handleFindmePressed = async () => {
@@ -69,15 +69,18 @@ export class ChooseLocation extends Component<Props> {
   };
 
   public render() {
-    const { region } = this.state;
+    const { location } = this.state;
     const { navigation } = this.props;
-    const onRegionChanged = navigation.getParam("onRegionChanged");
-    const initialRegion = navigation.getParam("initialRegion") || {
-      latitude: 24,
-      longitude: 121,
-      latitudeDelta: 2,
-      longitudeDelta: 2,
-    };
+    const onLocationChanged = navigation.getParam("onLocationChanged");
+    const initialLocation = navigation.getParam("initialLocation");
+    const initialRegion = initialLocation
+      ? { ...initialLocation, latitudeDelta: 0.0005, longitudeDelta: 0.0005 }
+      : {
+          latitude: 24,
+          longitude: 121,
+          latitudeDelta: 2,
+          longitudeDelta: 2,
+        };
 
     return (
       <View style={{ flex: 1 }}>
@@ -85,7 +88,9 @@ export class ChooseLocation extends Component<Props> {
           ref={c => (this.mapRef = c)}
           provider={PROVIDER_GOOGLE}
           initialRegion={initialRegion}
-          onRegionChangeComplete={region => this.setState({ region })}
+          onRegionChangeComplete={region =>
+            this.setState({ location: { latitude: region.latitude, longitude: region.longitude } })
+          }
           style={{ height: "100%", width: "100%" }}
         />
         <Icon
@@ -121,7 +126,7 @@ export class ChooseLocation extends Component<Props> {
           <Button
             style={{ backgroundColor: color.primary }}
             onPress={() => {
-              onRegionChanged(region);
+              onLocationChanged(location);
               navigation.goBack();
             }}
           >

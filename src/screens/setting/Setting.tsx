@@ -7,7 +7,6 @@ import color from "../../theme/color";
 import { AppState, PermissionStatus } from "../../typings";
 import { settingSelectors, settingActionCreators } from "../../redux/reducers/setting.reducer";
 import { permissionSelectors } from "../../redux/reducers/permission.reducer";
-import { getPermission } from "../../utils";
 import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 
 const styles = StyleSheet.create({

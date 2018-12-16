@@ -1,55 +1,38 @@
 import { combineReducers } from "redux";
 import { produce } from "immer";
 import { normalize, schema } from "normalizr";
-import { SpendingLabel, AppState } from "../../typings";
 import _ from "lodash";
 
-const spendingLabel = new schema.Entity("spendingLabels");
+import { AppState, SpendingLabel } from "../../typings";
+import { getDefaultSpendingLabels } from "../../utils";
 
-const FETCH_SPENDING_LABELS = "SPENDING-LABEL:FETCH_SPENDING_LABELS";
-const FETCH_SPENDING_LABELS_SUCCESS = "SPENDING-LABEL:FETCH_SPENDING_LABELS_SUCCESS";
-const FETCH_SPENDING_LABELS_FAILED = "SPENDING-LABEL:FETCH_SPENDING_LABELS_FAILED";
+const CREATE_DEFAULT_SPENDING_LABELS = "SPENDING-LABEL:CREATE_DEFAULT_SPENDING_LABELS";
 
 export const spendingLabelActionTypes = {
-  FETCH_SPENDING_LABELS,
-  FETCH_SPENDING_LABELS_SUCCESS,
-  FETCH_SPENDING_LABELS_FAILED,
+  CREATE_DEFAULT_SPENDING_LABELS,
 };
 
-const fetchSpendingLabel = (onSuccess: any) => ({
-  type: FETCH_SPENDING_LABELS,
-  meta: { onSuccess },
-});
-
-const fetchSpendingLabelSuccess = (spendingLabels: SpendingLabel[]) => ({
-  type: FETCH_SPENDING_LABELS_SUCCESS,
-  payload: { normalizedSpendingLabels: normalize(spendingLabels, [spendingLabel]) },
-});
-
-const fetchSpendingLabelFailed = (error: any) => ({
-  type: FETCH_SPENDING_LABELS_SUCCESS,
-  payload: { error },
-  error: true,
+const createDefaultSpendingLabels = (): any => ({
+  type: CREATE_DEFAULT_SPENDING_LABELS,
+  payload: { normalizedSpendingLabels: normalize(getDefaultSpendingLabels(), [new schema.Entity("spendingLabels")]) },
 });
 
 export const spendingLabelActionCreators = {
-  fetchSpendingLabel,
-  fetchSpendingLabelSuccess,
-  fetchSpendingLabelFailed,
+  createDefaultSpendingLabels,
 };
 
-const ids = (state = null, { type, payload }: { type: string; payload: any }) =>
+const ids = (state: string[] = [], { type, payload }: { type: string; payload: any }) =>
   produce(state, draft => {
     switch (type) {
-      case FETCH_SPENDING_LABELS_SUCCESS:
+      case CREATE_DEFAULT_SPENDING_LABELS:
         return payload.normalizedSpendingLabels.result;
     }
   });
 
-const byId = (state = null, { type, payload }: { type: string; payload: any }) =>
+const byId = (state: { [id: string]: SpendingLabel } = {}, { type, payload }: { type: string; payload: any }) =>
   produce(state, draft => {
     switch (type) {
-      case FETCH_SPENDING_LABELS_SUCCESS:
+      case CREATE_DEFAULT_SPENDING_LABELS:
         return payload.normalizedSpendingLabels.entities.spendingLabels;
     }
   });
@@ -60,7 +43,5 @@ export default combineReducers({
 });
 
 export const spendingLabelSelectors = {
-  getSpendingLabels: (state: AppState) =>
-    // @ts-ignore
-    state.spendingLabel.ids ? state.spendingLabel.ids.map(id => state.spendingLabel.byId[id]) : null,
+  getSpendingLabels: (state: AppState) => state.spendingLabel.ids.map(id => state.spendingLabel.byId[id]),
 };
