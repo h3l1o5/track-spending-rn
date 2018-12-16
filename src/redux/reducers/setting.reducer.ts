@@ -8,9 +8,10 @@ export const settingActionTypes = {
   SET_AUTO_LOCATE,
 };
 
-const setAutoLocate = (enabled: boolean) => ({
+const setAutoLocate = (enabled: boolean, fromEpic?: boolean) => ({
   type: SET_AUTO_LOCATE,
   payload: { enabled },
+  meta: { fromEpic },
 });
 
 export const settingActionCreators = {

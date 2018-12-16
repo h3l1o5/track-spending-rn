@@ -11,12 +11,15 @@ const checkPermissionAfterEnableAutoLocateEpic: Epic<any, any> = (action$, state
   action$.pipe(
     ofType(settingActionTypes.SET_AUTO_LOCATE),
     filter(
-      ({ payload }) => payload.enabled && permissionSelectors.getLocationPermissionStatus(state$.value) !== "authorized"
+      ({ payload, meta }) =>
+        !meta.fromEpic &&
+        payload.enabled &&
+        permissionSelectors.getLocationPermissionStatus(state$.value) !== "authorized"
     ),
     switchMap(() =>
       from(getPermission("location")).pipe(
         map(locationPermission => {
-          return settingActionCreators.setAutoLocate(locationPermission === "authorized");
+          return settingActionCreators.setAutoLocate(locationPermission === "authorized", true);
         })
       )
     )

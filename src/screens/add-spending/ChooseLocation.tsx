@@ -108,30 +108,26 @@ export class ChooseLocation extends Component<Props> {
         >
           <Text>返回</Text>
         </Button>
-        <Button
-          small
-          style={{ position: "absolute", bottom: 30, alignSelf: "center", zIndex: 100, backgroundColor: color.primary }}
-          onPress={() => {
-            onRegionChanged(region);
-            navigation.goBack();
-          }}
-        >
-          <Text>選擇</Text>
-        </Button>
-        <TouchableOpacity onPress={this.handleFindmePressed}>
-          <Icon
-            type="MaterialCommunityIcons"
-            name="radar"
+        <View style={{ position: "absolute", bottom: 30, alignSelf: "center", zIndex: 100, flexDirection: "row" }}>
+          <Button
+            bordered
             style={{
-              position: "absolute",
-              bottom: 20,
-              right: 20,
-              zIndex: 100,
-              color: color.secondary,
-              fontSize: 40,
+              borderColor: "transparent",
             }}
-          />
-        </TouchableOpacity>
+            onPress={this.handleFindmePressed}
+          >
+            <Text style={{ color: color.secondary }}>目前位置</Text>
+          </Button>
+          <Button
+            style={{ backgroundColor: color.primary }}
+            onPress={() => {
+              onRegionChanged(region);
+              navigation.goBack();
+            }}
+          >
+            <Text>選擇</Text>
+          </Button>
+        </View>
       </View>
     );
   }
