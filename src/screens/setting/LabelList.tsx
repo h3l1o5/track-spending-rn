@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
-import { NavigationScreenConfig, NavigationScreenOptions } from "react-navigation";
+import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 import { Content, List, ListItem, Icon, Body, Right } from "native-base";
 import _ from "lodash";
 
@@ -12,6 +12,7 @@ import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 import NavigationHeaderButton from "../../components/NavigationHeaderButton";
 
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   spendingLabels: SpendingLabel[] | null;
 }
 
@@ -22,7 +23,9 @@ export class LabelList extends Component<Props> {
     headerBackTitleStyle: { color: color.dark },
     headerTintColor: color.dark,
     headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
-    headerRight: <NavigationHeaderButton iconName="add" />,
+    headerRight: (
+      <NavigationHeaderButton iconName="add" onPress={() => navigation.navigate("LabelManager", { mode: "create" })} />
+    ),
   });
 
   public render() {

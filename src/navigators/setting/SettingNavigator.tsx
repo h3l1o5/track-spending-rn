@@ -5,11 +5,13 @@ import color from "../../theme/color";
 
 import Setting from "../../screens/setting/Setting";
 import LabelList from "../../screens/setting/LabelList";
+import LabelManager from "../../screens/setting/LabelManager";
 
 export default createStackNavigator(
   {
     Setting,
     LabelList,
+    LabelManager,
   },
   {
     headerMode: "float",
