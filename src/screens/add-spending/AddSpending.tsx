@@ -12,10 +12,12 @@ import { AppState, SpendingLabel } from "../../typings";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import InfoPanel from "./InfoPanel";
 import ControlPanel from "./ControlPanel";
+import { settingSelectors } from "../../redux/reducers/setting.reducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   labels: SpendingLabel[] | null;
+  isAutoLocateEnabled: boolean;
 }
 interface State {
   spending: number;
@@ -55,7 +57,7 @@ export class AddSpending extends Component<Props, State> {
     this.setState({ time });
   };
 
-  public handleRegionChanged = (region: Region) => {
+  public handleRegionChanged = (region?: Region) => {
     this.setState({ region });
   };
 
@@ -65,17 +67,41 @@ export class AddSpending extends Component<Props, State> {
 
   public handleSubmit = async () => {
     try {
-      await firestore()
-        .collection(`user/${_.get(firebase.auth(), "currentUser.uid")}/consumption`)
-        .add({ ...this.state, createdAt: new Date() });
-      this.setState({ spending: 0, comment: undefined });
-      Toast.show({
-        type: "success",
-        text: "新增消費紀錄成功✌️",
-        buttonText: "好",
-        duration: 5000,
-        position: "bottom",
-      });
+      const newConsumption = { ...this.state, createdAt: new Date() };
+      if (!this.state.region && this.props.isAutoLocateEnabled) {
+        navigator.geolocation.getCurrentPosition(async currentLocation => {
+          newConsumption.region = {
+            latitude: currentLocation.coords.latitude,
+            longitude: currentLocation.coords.longitude,
+            latitudeDelta: 0.005,
+            longitudeDelta: 0.005,
+          };
+
+          await firestore()
+            .collection(`user/${_.get(firebase.auth(), "currentUser.uid")}/consumption`)
+            .add(newConsumption);
+          this.setState({ spending: 0, comment: undefined });
+          Toast.show({
+            type: "success",
+            text: "新增消費紀錄成功✌️",
+            buttonText: "好",
+            duration: 5000,
+            position: "bottom",
+          });
+        });
+      } else {
+        await firestore()
+          .collection(`user/${_.get(firebase.auth(), "currentUser.uid")}/consumption`)
+          .add({ ...this.state, createdAt: new Date() });
+        this.setState({ spending: 0, comment: undefined });
+        Toast.show({
+          type: "success",
+          text: "新增消費紀錄成功✌️",
+          buttonText: "好",
+          duration: 5000,
+          position: "bottom",
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +123,7 @@ export class AddSpending extends Component<Props, State> {
             onRegionChanged={this.handleRegionChanged}
             comment={comment}
             onCommentChanged={this.handleCommentChanged}
+            isAutoLocateEnabled={this.props.isAutoLocateEnabled}
             style={{ padding: 15 }}
           />
           <ControlPanel
@@ -115,5 +142,6 @@ export class AddSpending extends Component<Props, State> {
 }
 
 export default connect((state: AppState) => ({
+  isAutoLocateEnabled: settingSelectors.isAutoLocateEnabled(state),
   labels: spendingLabelSelectors.getSpendingLabels(state),
 }))(AddSpending);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
-import { Text, View, Input } from "native-base";
+import { Text, View, Input, ActionSheet } from "native-base";
 import { NavigationScreenProp } from "react-navigation";
 import { Region } from "react-native-maps";
 import DateTimePicker from "react-native-modal-datetime-picker";
@@ -27,9 +27,10 @@ interface Props {
   time: Date;
   onTimeChanged: (time: Date) => void;
   region?: Region;
-  onRegionChanged: (region: Region) => void;
+  onRegionChanged: (region?: Region) => void;
   comment?: string;
   onCommentChanged: (comment: string) => void;
+  isAutoLocateEnabled: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -39,15 +40,37 @@ export class InfoPanel extends Component<Props> {
     isDateTimePickerVisible: false,
   };
 
+  public handleLocationPressed = () => {
+    if (!this.props.region) {
+      return this.props.navigation.navigate("ChooseLocation", {
+        initialRegion: this.props.region,
+        onRegionChanged: this.props.onRegionChanged,
+      });
+    }
+
+    ActionSheet.show(
+      { options: ["編輯", "刪除", "取消"], destructiveButtonIndex: 1, cancelButtonIndex: 2 },
+      buttonIndex =>
+        buttonIndex === 0
+          ? this.props.navigation.navigate("ChooseLocation", {
+              initialRegion: this.props.region,
+              onRegionChanged: this.props.onRegionChanged,
+            })
+          : buttonIndex === 1
+          ? this.props.onRegionChanged(undefined)
+          : null
+    );
+  };
+
   public render() {
     const {
       selectedLabel,
       time,
       onTimeChanged,
       region,
-      onRegionChanged,
       comment,
       onCommentChanged,
+      isAutoLocateEnabled,
       style,
     } = this.props;
 
@@ -64,6 +87,12 @@ export class InfoPanel extends Component<Props> {
             .format("YYYYMMDD") === moment().format("YYYYMMDD")
         ? "昨天"
         : moment(time).format("YYYY年M月D號");
+
+    const locationDisplayText = region
+      ? `經度: ${region.longitude.toFixed(3)} | 緯度: ${region.latitude.toFixed(3)}`
+      : isAutoLocateEnabled
+      ? "目前位置"
+      : "未設定";
 
     return (
       <View style={[{ flex: 1, flexDirection: "column" }, style]}>
@@ -97,21 +126,12 @@ export class InfoPanel extends Component<Props> {
               <Text style={styles.title}>地點</Text>
               <TouchableOpacity>
                 <View style={{ paddingLeft: 10, flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ color: "#5893d4" }}>(自動位置設定: 關閉)</Text>
+                  <Text style={{ color: "#5893d4" }}>(自動位置設定: {isAutoLocateEnabled ? "開啟" : "關閉"})</Text>
                 </View>
               </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("ChooseLocation", {
-                  initialRegion: region,
-                  onRegionChanged,
-                })
-              }
-            >
-              <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>
-                {region ? `經度: ${region.longitude.toFixed(3)} | 緯度: ${region.latitude.toFixed(3)}` : "未設定"}
-              </Text>
+            <TouchableOpacity onPress={this.handleLocationPressed}>
+              <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>{locationDisplayText}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.itemContainer}>
