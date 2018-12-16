@@ -19,6 +19,9 @@ export interface Consumption {
 }
 
 export interface AppState {
+  global: {
+    isFirstTime: boolean;
+  };
   setting: {
     autoLocateEnabled: boolean;
   };

@@ -1,4 +1,4 @@
-import { SpendingLabel, Category } from "../typings";
+import { Category } from "../typings";
 import _ from "lodash";
 import uuid from "uuid/v4";
 
@@ -23,9 +23,8 @@ const DEFAULT_SPENDING_LABELS: Array<{ category: Category; name: string }> = [
   { category: "other", name: "看醫生" },
 ];
 
-export default (): SpendingLabel[] =>
-  _.map(DEFAULT_SPENDING_LABELS, label => ({
-    ...label,
-    id: uuid(),
-    createdAt: new Date(),
-  }));
+export default _.map(DEFAULT_SPENDING_LABELS, label => ({
+  ...label,
+  id: uuid(),
+  createdAt: new Date(),
+}));

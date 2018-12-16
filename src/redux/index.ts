@@ -12,7 +12,7 @@ const rootReducerWithPersist = persistReducer(
   {
     key: "root",
     storage: AsyncStorage,
-    whitelist: ["setting", "spendingLabel", "consumption"],
+    whitelist: ["global", "setting", "spendingLabel", "consumption"],
   },
   rootReducer
 );

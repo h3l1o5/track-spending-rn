@@ -1,27 +1,20 @@
 import { combineReducers } from "redux";
 import { produce } from "immer";
-import { normalize, schema } from "normalizr";
 import _ from "lodash";
 
 import { AppState, SpendingLabel, Category } from "../../typings";
-import { getDefaultSpendingLabels } from "../../utils";
+import { DEFAULT_SPENDING_LABELS } from "../../constants";
+import { globalActionTypes } from "./global.reducer";
 
-const CREATE_DEFAULT_SPENDING_LABELS = "SPENDING-LABEL:CREATE_DEFAULT_SPENDING_LABELS";
 const CREATE_SPENDING_LABEL = "SPENDING-LABEL:CREATE_SPENDING_LABEL";
 const UPDATE_SPENDING_LABEL = "SPENDING-LABEL:UPDATE_SPENDING_LABEL";
 const DELETE_SPENDING_LABEL = "SPENDING-LABEL:DELETE_SPENDING_LABEL";
 
 export const spendingLabelActionTypes = {
-  CREATE_DEFAULT_SPENDING_LABELS,
   CREATE_SPENDING_LABEL,
   UPDATE_SPENDING_LABEL,
   DELETE_SPENDING_LABEL,
 };
-
-const createDefaultSpendingLabels = (): any => ({
-  type: CREATE_DEFAULT_SPENDING_LABELS,
-  payload: { normalizedSpendingLabels: normalize(getDefaultSpendingLabels(), [new schema.Entity("spendingLabels")]) },
-});
 
 const createSpendingLabel = (spendingLabel: SpendingLabel) => ({
   type: CREATE_SPENDING_LABEL,
@@ -39,7 +32,6 @@ const deleteSpendingLabel = (id: string) => ({
 });
 
 export const spendingLabelActionCreators = {
-  createDefaultSpendingLabels,
   createSpendingLabel,
   updateSpendingLabel,
   deleteSpendingLabel,
@@ -48,8 +40,8 @@ export const spendingLabelActionCreators = {
 const ids = (state: string[] = [], { type, payload }: { type: string; payload: any }) =>
   produce(state, draft => {
     switch (type) {
-      case CREATE_DEFAULT_SPENDING_LABELS:
-        return payload.normalizedSpendingLabels.result;
+      case globalActionTypes.ONBOARD:
+        return DEFAULT_SPENDING_LABELS.map(label => label.id);
       case CREATE_SPENDING_LABEL:
         draft.push(payload.spendingLabel.id);
         break;
@@ -61,8 +53,9 @@ const ids = (state: string[] = [], { type, payload }: { type: string; payload: a
 const byId = (state: { [id: string]: SpendingLabel } = {}, { type, payload }: { type: string; payload: any }) =>
   produce(state, draft => {
     switch (type) {
-      case CREATE_DEFAULT_SPENDING_LABELS:
-        return payload.normalizedSpendingLabels.entities.spendingLabels;
+      case globalActionTypes.ONBOARD:
+        DEFAULT_SPENDING_LABELS.forEach(label => (draft[label.id] = label));
+        break;
       case CREATE_SPENDING_LABEL:
         draft[payload.spendingLabel.id] = payload.spendingLabel;
         break;
