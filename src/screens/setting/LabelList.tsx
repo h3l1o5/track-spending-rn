@@ -24,7 +24,11 @@ export class LabelList extends Component<Props> {
     headerTintColor: color.dark,
     headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
     headerRight: (
-      <NavigationHeaderButton iconName="add" onPress={() => navigation.navigate("LabelManager", { mode: "create" })} />
+      <NavigationHeaderButton
+        iconType="MaterialIcons"
+        iconName="add-circle-outline"
+        onPress={() => navigation.navigate("LabelManager", { mode: "create" })}
+      />
     ),
   });
 
