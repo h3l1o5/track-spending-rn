@@ -3,17 +3,19 @@ import { Text, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
 import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 import { Content, List, ListItem, Icon, Body, Right } from "native-base";
+import uuid from "uuid/v4";
 import _ from "lodash";
 
 import color from "../../theme/color";
 import { AppState, SpendingLabel, Category } from "../../typings";
-import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
+import { spendingLabelSelectors, spendingLabelActionCreators } from "../../redux/reducers/spending-label.reducer";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 import NavigationHeaderButton from "../../components/NavigationHeaderButton";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   spendingLabels: SpendingLabel[] | null;
+  createSpendingLabel: (spendingLabel: SpendingLabel) => void;
 }
 
 export class LabelList extends Component<Props> {
@@ -31,6 +33,10 @@ export class LabelList extends Component<Props> {
       />
     ),
   });
+
+  public handleCreateNewLabel = (category: Category, name: string) => {
+    this.props.createSpendingLabel({ category, name, id: uuid(), createdAt: new Date() });
+  };
 
   public render() {
     const spendingLabels = this.props.spendingLabels || [];
@@ -72,6 +78,11 @@ export class LabelList extends Component<Props> {
   }
 }
 
-export default connect((state: AppState) => ({
-  spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
-}))(LabelList);
+export default connect(
+  (state: AppState) => ({
+    spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
+  }),
+  {
+    createSpendingLabel: spendingLabelActionCreators.createSpendingLabel,
+  }
+)(LabelList);
