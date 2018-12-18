@@ -1,14 +1,16 @@
 import React, { Component } from "react";
+import { FlatList, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
 import { Text, View, Button, Icon } from "native-base";
+import { NavigationScreenProp } from "react-navigation";
+import _ from "lodash";
 
 import color from "../../theme/color";
-import { FlatList, TouchableOpacity, StyleProp, ViewStyle } from "react-native";
-import _ from "lodash";
 import { getCategoryMandarin, getCategoryIcon } from "../../utils";
 import NumberPad from "../../components/NumberPad";
 import { SpendingLabel } from "../../typings";
 
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   spending: number;
   labels: SpendingLabel[];
   selectedLabelId?: string;
@@ -62,38 +64,53 @@ export class ControlPanel extends Component<Props> {
         </View>
         <View style={{ flexDirection: "row" }}>
           <View style={{ flex: 2, borderRightWidth: 4, borderRightColor: color.primary, marginVertical: 15 }}>
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              style={{ flex: 1, marginHorizontal: 7 }}
-              data={_.map(labels, label => ({
-                ...label,
-                categoryMandarin: getCategoryMandarin(label.category),
-                categoryIcon: getCategoryIcon(label.category),
-              }))}
-              keyExtractor={() => Math.random().toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => onLabelSelected(item.id || "")}>
-                  <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <Text>{item.categoryIcon}</Text>
-                    <Text
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      style={{
-                        flex: 1,
-                        fontSize: 18,
-                        marginVertical: 5,
-                        marginLeft: 2,
-                        paddingVertical: 5,
-                        fontWeight: item.id === selectedLabelId ? "bold" : "normal",
-                        color: item.id === selectedLabelId ? color.secondary : color.dark,
-                      }}
-                    >
-                      {item.name}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              )}
-            />
+            {labels.length === 0 ? (
+              <View style={{ margin: 10 }}>
+                <Text style={{ marginBottom: 20, color: color.dark, textAlign: "center" }}>
+                  目前沒有任何標籤，新增一個吧！
+                </Text>
+                <Button
+                  style={{ backgroundColor: "#5893d4" }}
+                  block
+                  onPress={() => this.props.navigation.navigate("LabelManager", { mode: "create" })}
+                >
+                  <Text>新增</Text>
+                </Button>
+              </View>
+            ) : (
+              <FlatList
+                showsVerticalScrollIndicator={false}
+                style={{ flex: 1, marginHorizontal: 7 }}
+                data={_.map(labels, label => ({
+                  ...label,
+                  categoryMandarin: getCategoryMandarin(label.category),
+                  categoryIcon: getCategoryIcon(label.category),
+                }))}
+                keyExtractor={() => Math.random().toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => onLabelSelected(item.id || "")}>
+                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                      <Text>{item.categoryIcon}</Text>
+                      <Text
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        style={{
+                          flex: 1,
+                          fontSize: 18,
+                          marginVertical: 5,
+                          marginLeft: 2,
+                          paddingVertical: 5,
+                          fontWeight: item.id === selectedLabelId ? "bold" : "normal",
+                          color: item.id === selectedLabelId ? color.secondary : color.dark,
+                        }}
+                      >
+                        {item.name}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
           </View>
           <View style={{ flex: 3, padding: 10, paddingRight: 0 }}>
             <NumberPad onButtonPressed={this.handleNumberPadPressed} />

@@ -1,13 +1,14 @@
 import React, { Component } from "react";
-import { Content, Text, List, ListItem, Left, Body, Right, Icon, Switch } from "native-base";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { connect } from "react-redux";
+import { Content, Text, List, ListItem, Left, Body, Right, Icon, Switch } from "native-base";
+import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 
 import color from "../../theme/color";
-import { AppState, PermissionStatus } from "../../typings";
+import { AppState, PermissionStatus, SpendingLabel } from "../../typings";
 import { settingSelectors, settingActionCreators } from "../../redux/reducers/setting.reducer";
 import { permissionSelectors } from "../../redux/reducers/permission.reducer";
-import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
+import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 
 const styles = StyleSheet.create({
   itemIcon: { height: 30, width: 30, textAlign: "center", color: color.dark },
@@ -15,10 +16,11 @@ const styles = StyleSheet.create({
 });
 
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   locationPermission: PermissionStatus | null;
   isAutoLocateEnabled: boolean;
+  spendingLabels: SpendingLabel[];
   setAutoLocate: (enabled: boolean) => void;
-  navigation: NavigationScreenProp<any, any>;
 }
 export class Setting extends Component<Props> {
   public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
@@ -28,7 +30,7 @@ export class Setting extends Component<Props> {
   });
 
   public render() {
-    const { isAutoLocateEnabled, setAutoLocate } = this.props;
+    const { isAutoLocateEnabled, setAutoLocate, spendingLabels } = this.props;
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -73,7 +75,7 @@ export class Setting extends Component<Props> {
                 <Text style={styles.itemText}>標籤</Text>
               </Body>
               <Right>
-                <Text>18</Text>
+                <Text>{spendingLabels.length}</Text>
                 <Icon name="arrow-forward" />
               </Right>
             </ListItem>
@@ -88,6 +90,7 @@ export default connect(
   (state: AppState) => ({
     locationPermission: permissionSelectors.getLocationPermissionStatus(state),
     isAutoLocateEnabled: settingSelectors.isAutoLocateEnabled(state),
+    spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
   }),
   { setAutoLocate: settingActionCreators.setAutoLocate }
 )(Setting);

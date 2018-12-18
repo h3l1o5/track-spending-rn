@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { SafeAreaView } from "react-native";
+import { SafeAreaView, Alert } from "react-native";
 import { Content, Toast } from "native-base";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
@@ -36,7 +36,7 @@ export class AddSpending extends Component<Props, State> {
 
     this.state = {
       spending: 0,
-      selectedLabelId: props.labels[0].id,
+      selectedLabelId: _.get(props.labels[0], "id", ""),
       time: moment()
         .startOf("day")
         .add("12", "hours")
@@ -44,12 +44,6 @@ export class AddSpending extends Component<Props, State> {
       location: null,
       comment: null,
     };
-  }
-
-  public componentDidMount() {
-    if (this.props.labels && !this.state.selectedLabelId) {
-      this.setState({ selectedLabelId: this.props.labels[0].id });
-    }
   }
 
   public handleLabelSelected = (labelId: string) => {
@@ -73,26 +67,18 @@ export class AddSpending extends Component<Props, State> {
   };
 
   public handleSubmit = () => {
-    try {
-      const newConsumption = { ...this.state, id: uuid(), createdAt: new Date() };
-      if (!this.state.location && this.props.isAutoLocateEnabled) {
-        navigator.geolocation.getCurrentPosition(currentLocation => {
-          newConsumption.location = {
-            latitude: currentLocation.coords.latitude,
-            longitude: currentLocation.coords.longitude,
-          };
+    if (this.props.labels.length === 0 || this.state.selectedLabelId === "") {
+      return Alert.alert("無法設定消費項目，先去新增一個標籤吧！", "", [{ text: "好" }]);
+    }
 
-          this.props.createConsumption(newConsumption);
-          this.setState({ spending: 0, comment: null });
-          Toast.show({
-            type: "success",
-            text: "新增消費紀錄成功✌️",
-            buttonText: "好",
-            duration: 5000,
-            position: "bottom",
-          });
-        });
-      } else {
+    const newConsumption = { ...this.state, id: uuid(), createdAt: new Date() };
+    if (!this.state.location && this.props.isAutoLocateEnabled) {
+      navigator.geolocation.getCurrentPosition(currentLocation => {
+        newConsumption.location = {
+          latitude: currentLocation.coords.latitude,
+          longitude: currentLocation.coords.longitude,
+        };
+
         this.props.createConsumption(newConsumption);
         this.setState({ spending: 0, comment: null });
         Toast.show({
@@ -102,9 +88,17 @@ export class AddSpending extends Component<Props, State> {
           duration: 5000,
           position: "bottom",
         });
-      }
-    } catch (error) {
-      console.error(error);
+      });
+    } else {
+      this.props.createConsumption(newConsumption);
+      this.setState({ spending: 0, comment: null });
+      Toast.show({
+        type: "success",
+        text: "新增消費紀錄成功✌️",
+        buttonText: "好",
+        duration: 5000,
+        position: "bottom",
+      });
     }
   };
 
@@ -134,6 +128,7 @@ export class AddSpending extends Component<Props, State> {
             onLabelSelected={this.handleLabelSelected}
             onSpendingChanged={this.handleSpendingChanged}
             onSubmit={this.handleSubmit}
+            navigation={this.props.navigation}
             style={{ paddingHorizontal: 10 }}
           />
         </Content>

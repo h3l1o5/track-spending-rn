@@ -73,10 +73,11 @@ export class InfoPanel extends Component<Props> {
       style,
     } = this.props;
 
-    const labelCategory = selectedLabel
-      ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)}`
-      : "";
-    const labelName = selectedLabel ? selectedLabel.name : "";
+    const labelDisplayText = selectedLabel
+      ? `${getCategoryIcon(selectedLabel.category)} ${getCategoryMandarin(selectedLabel.category)} | ${
+          selectedLabel.name
+        }`
+      : "無";
 
     const timeDisplayText =
       moment(time).format("YYYYMMDD") === moment().format("YYYYMMDD")
@@ -107,7 +108,7 @@ export class InfoPanel extends Component<Props> {
           <View style={[styles.itemContainer, { alignItems: "center" }]}>
             <Text style={styles.title}>消費項目</Text>
             <Text numberOfLines={1} style={styles.content}>
-              {labelCategory} | {labelName}
+              {labelDisplayText}
             </Text>
           </View>
           <View style={[styles.itemContainer, { alignItems: "center" }]}>

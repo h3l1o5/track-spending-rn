@@ -113,7 +113,7 @@ export class ChooseLocation extends Component<Props> {
           type="Ionicons"
           name="md-pin"
           style={{
-            color: color.red,
+            color: color.danger,
             fontSize: 40,
             position: "absolute",
             top: DEVICE_HEIGHT_WITH_TABBAR / 2 - 40,
