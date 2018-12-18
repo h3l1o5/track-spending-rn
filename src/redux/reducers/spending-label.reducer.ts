@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { produce } from "immer";
 import _ from "lodash";
 
-import { AppState, SpendingLabel, Category } from "../../typings";
+import { AppState, SpendingLabel, SpendingLabelUpdateProperties } from "../../typings";
 import { DEFAULT_SPENDING_LABELS } from "../../constants";
 import { globalActionTypes } from "./global.reducer";
 
@@ -21,7 +21,7 @@ const createSpendingLabel = (spendingLabel: SpendingLabel) => ({
   payload: { spendingLabel },
 });
 
-const updateSpendingLabel = (id: string, properties: { category?: Category; name?: string }) => ({
+const updateSpendingLabel = (id: string, properties: SpendingLabelUpdateProperties) => ({
   type: UPDATE_SPENDING_LABEL,
   payload: { id, properties },
 });
@@ -79,4 +79,5 @@ export const spendingLabelSelectors = {
       .map(id => state.spendingLabel.byId[id])
       .orderBy("category")
       .value(),
+  getSpendingLabelById: (state: AppState, id: string) => state.spendingLabel.byId[id],
 };

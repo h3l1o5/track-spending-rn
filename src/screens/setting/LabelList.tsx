@@ -49,7 +49,14 @@ export class LabelList extends Component<Props> {
           </Text>
           <List style={{ marginBottom: 20 }}>
             {_.map(filteredLabels, spendingLabel => (
-              <ListItem key={spendingLabel.id} style={{ marginVertical: 10 }}>
+              <ListItem
+                key={spendingLabel.id}
+                style={{ marginVertical: 10 }}
+                button
+                onPress={() =>
+                  this.props.navigation.navigate("LabelManager", { mode: "edit", labelId: spendingLabel.id })
+                }
+              >
                 <Body>
                   <Text style={{ color: color.dark }}>{spendingLabel.name}</Text>
                 </Body>

@@ -8,6 +8,11 @@ export interface SpendingLabel {
   createdAt?: Date;
 }
 
+export interface SpendingLabelUpdateProperties {
+  category?: Category;
+  name?: string;
+}
+
 export interface Consumption {
   id: string;
   spending: number;

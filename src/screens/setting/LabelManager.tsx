@@ -4,12 +4,13 @@ import { connect } from "react-redux";
 import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
 import { Content, Button, ActionSheet, Input, Toast } from "native-base";
 import uuid from "uuid/v4";
+import _ from "lodash";
 
 import { CATEGORIES } from "../../constants";
 import color from "../../theme/color";
-import { Category, SpendingLabel } from "../../typings";
+import { Category, SpendingLabel, AppState, SpendingLabelUpdateProperties } from "../../typings";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
-import { spendingLabelActionCreators } from "../../redux/reducers/spending-label.reducer";
+import { spendingLabelActionCreators, spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 
 interface State {
   isEditingName: boolean;
@@ -18,7 +19,10 @@ interface State {
 }
 interface Props {
   navigation: NavigationScreenProp<any, any>;
+  spendingLabel?: SpendingLabel;
   createSpendingLabel: (spendingLabel: SpendingLabel) => void;
+  updateSpendingLabel: (id: string, properties: SpendingLabelUpdateProperties) => void;
+  deleteSpendingLabel: (id: string) => void;
 }
 
 export class LabelManager extends Component<Props, State> {
@@ -35,6 +39,13 @@ export class LabelManager extends Component<Props, State> {
     selectedCategory: "food",
     name: "",
   };
+
+  public componentDidMount() {
+    const { navigation, spendingLabel } = this.props;
+    if (navigation.getParam("mode") === "edit" && spendingLabel) {
+      this.setState({ selectedCategory: spendingLabel.category, name: spendingLabel.name });
+    }
+  }
 
   public handleCategoryPressed = () => {
     ActionSheet.show(
@@ -59,7 +70,9 @@ export class LabelManager extends Component<Props, State> {
       return Alert.alert("要幫標籤取個名字喔", "", [{ text: "好" }]);
     }
 
-    if (this.props.navigation.getParam("mode") === "create") {
+    const mode = this.props.navigation.getParam("mode");
+
+    if (mode === "create") {
       this.props.createSpendingLabel({
         category: this.state.selectedCategory,
         name: this.state.name,
@@ -77,10 +90,52 @@ export class LabelManager extends Component<Props, State> {
 
       this.props.navigation.goBack();
     }
+
+    if (mode === "edit") {
+      const id = _.get(this.props.spendingLabel, "id", "");
+
+      this.props.updateSpendingLabel(id, { category: this.state.selectedCategory, name: this.state.name });
+
+      Toast.show({
+        type: "success",
+        text: "編輯標籤成功👍",
+        buttonText: "好",
+        duration: 5000,
+        position: "bottom",
+      });
+
+      this.props.navigation.goBack();
+    }
+  };
+
+  public handleDeletePressed = () => {
+    Alert.alert("警告", "確定要刪除這個標籤嗎?", [
+      {
+        text: "確定",
+        style: "destructive",
+        onPress: () => {
+          const id = _.get(this.props.spendingLabel, "id", "");
+
+          this.props.deleteSpendingLabel(id);
+
+          Toast.show({
+            type: "success",
+            text: "刪除標籤成功👍",
+            buttonText: "好",
+            duration: 5000,
+            position: "bottom",
+          });
+
+          this.props.navigation.goBack();
+        },
+      },
+      { text: "取消", style: "cancel" },
+    ]);
   };
 
   public render() {
     const { selectedCategory, name, isEditingName } = this.state;
+    const mode = this.props.navigation.getParam("mode");
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
@@ -124,15 +179,23 @@ export class LabelManager extends Component<Props, State> {
               </TouchableOpacity>
             )}
           </View>
-          {/* <Button bordered danger block style={{ marginHorizontal: 40, marginTop: 20 }}>
-            <Text style={{ color: color.red }}>刪除</Text>
-          </Button> */}
+          {mode === "edit" && (
+            <Button
+              bordered
+              danger
+              block
+              style={{ marginHorizontal: 40, marginTop: 20 }}
+              onPress={this.handleDeletePressed}
+            >
+              <Text style={{ color: color.red }}>刪除</Text>
+            </Button>
+          )}
           <Button
             block
             style={{ margin: 40, marginTop: 20, backgroundColor: color.primary }}
             onPress={this.handleSubmitPressed}
           >
-            <Text style={{ color: color.white }}>新增</Text>
+            <Text style={{ color: color.white }}>{mode === "create" ? "新增" : "完成編輯"}</Text>
           </Button>
         </Content>
       </SafeAreaView>
@@ -141,8 +204,15 @@ export class LabelManager extends Component<Props, State> {
 }
 
 export default connect(
-  null,
+  (state: AppState, props: Props) => ({
+    spendingLabel:
+      props.navigation.getParam("mode") === "edit"
+        ? spendingLabelSelectors.getSpendingLabelById(state, props.navigation.getParam("labelId"))
+        : undefined,
+  }),
   {
     createSpendingLabel: spendingLabelActionCreators.createSpendingLabel,
+    updateSpendingLabel: spendingLabelActionCreators.updateSpendingLabel,
+    deleteSpendingLabel: spendingLabelActionCreators.deleteSpendingLabel,
   }
 )(LabelManager);
