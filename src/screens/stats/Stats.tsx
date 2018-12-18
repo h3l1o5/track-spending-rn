@@ -6,8 +6,8 @@ export class Stats extends Component {
   public render() {
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Content>
-          <Text>Stats</Text>
+        <Content contentContainerStyle={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <Text style={{ fontSize: 28 }}>👷🏽 施工中...</Text>
         </Content>
       </SafeAreaView>
     );
