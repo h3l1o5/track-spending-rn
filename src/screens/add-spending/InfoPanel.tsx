@@ -13,7 +13,7 @@ import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 const styles = StyleSheet.create({
   itemContainer: { flex: 1, justifyContent: "space-around" },
   title: { fontSize: 24, fontWeight: "bold", color: color.primary },
-  content: { fontSize: 18, color: color.dark },
+  content: { fontSize: 18 },
 });
 
 interface State {

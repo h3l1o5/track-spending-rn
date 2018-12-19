@@ -58,7 +58,7 @@ export class LabelList extends Component<Props> {
                 }
               >
                 <Body>
-                  <Text style={{ color: color.dark }}>{spendingLabel.name}</Text>
+                  <Text>{spendingLabel.name}</Text>
                 </Body>
                 <Right>
                   <Icon name="arrow-forward" />

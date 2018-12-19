@@ -66,9 +66,7 @@ export class ControlPanel extends Component<Props> {
           <View style={{ flex: 2, borderRightWidth: 4, borderRightColor: color.primary, marginVertical: 15 }}>
             {labels.length === 0 ? (
               <View style={{ margin: 10 }}>
-                <Text style={{ marginBottom: 20, color: color.dark, textAlign: "center" }}>
-                  目前沒有任何標籤，新增一個吧！
-                </Text>
+                <Text style={{ marginBottom: 20, textAlign: "center" }}>目前沒有任何標籤，新增一個吧！</Text>
                 <Button
                   style={{ backgroundColor: "#5893d4" }}
                   block

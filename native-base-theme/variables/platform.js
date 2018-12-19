@@ -234,7 +234,7 @@ export default {
   tabFontSize: 15,
 
   // Text
-  textColor: "#000",
+  textColor: "#4d4d4d",
   inverseTextColor: "#fff",
   noteFontSize: 14,
   get defaultTextColor() {

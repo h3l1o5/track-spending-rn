@@ -12,7 +12,6 @@ import { spendingLabelSelectors } from "../../redux/reducers/spending-label.redu
 
 const styles = StyleSheet.create({
   itemIcon: { height: 30, width: 30, textAlign: "center", color: color.dark },
-  itemText: { color: color.dark },
 });
 
 interface Props {
@@ -52,7 +51,7 @@ export class Setting extends Component<Props> {
                 <Icon type="Feather" name="map-pin" style={styles.itemIcon} />
               </Left>
               <Body>
-                <Text style={styles.itemText}>自動定位</Text>
+                <Text>自動定位</Text>
               </Body>
               <Right>
                 <Switch
@@ -72,7 +71,7 @@ export class Setting extends Component<Props> {
                 <Icon type="Feather" name="tag" style={styles.itemIcon} />
               </Left>
               <Body>
-                <Text style={styles.itemText}>標籤</Text>
+                <Text>標籤</Text>
               </Body>
               <Right>
                 <Text>{spendingLabels.length}</Text>

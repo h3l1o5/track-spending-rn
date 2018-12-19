@@ -23,6 +23,7 @@ interface Props {
 interface State {
   spending: number;
   selectedLabelId: string;
+  // FIXME: use number(timestamp) instead of Date object
   time: Date;
   location: { latitude: number; longitude: number } | null;
   comment: string | null;

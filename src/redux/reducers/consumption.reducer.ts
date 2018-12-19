@@ -1,7 +1,7 @@
 import produce from "immer";
 import uuid from "uuid/v4";
 
-import { Consumption } from "../../typings";
+import { Consumption, AppState } from "../../typings";
 import { combineReducers } from "redux";
 
 const CREATE_CONSUMPTION = "CONSUMPTION:CREATE_CONSUMPTION";
@@ -44,3 +44,7 @@ const byId = (state: { [id: string]: Consumption } = {}, { type, payload }: { ty
   });
 
 export default combineReducers({ ids, byId });
+
+export const consumptionSelectors = {
+  getConsumptions: (state: AppState) => state.consumption.ids.map(id => state.consumption.byId[id]),
+};
