@@ -187,7 +187,7 @@ export class LabelManager extends Component<Props, State> {
               style={{ marginHorizontal: 40, marginTop: 20 }}
               onPress={this.handleDeletePressed}
             >
-              <Text style={{ color: color.red }}>刪除</Text>
+              <Text style={{ color: color.danger }}>刪除</Text>
             </Button>
           )}
           <Button
