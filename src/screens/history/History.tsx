@@ -57,7 +57,13 @@ export class History extends Component<Props> {
             sections={consumptionSections}
             keyExtractor={item => item.id}
             renderSectionHeader={({ section }) => (
-              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: section.show ? 0 : 15 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  marginBottom: _.includes(expandedSections, section.title) ? 0 : 15,
+                }}
+              >
                 <Icon type="Octicons" name="primitive-dot" style={{ color: color.primary, height: 30, width: 30 }} />
                 <TouchableOpacity onPress={() => this.handleSectionHeaderPressed(section.title)}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
