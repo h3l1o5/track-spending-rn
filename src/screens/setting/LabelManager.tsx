@@ -77,7 +77,7 @@ export class LabelManager extends Component<Props, State> {
         category: this.state.selectedCategory,
         name: this.state.name,
         id: uuid(),
-        createdAt: new Date(),
+        createdAt: Date.now(),
       });
 
       Toast.show({

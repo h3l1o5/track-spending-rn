@@ -23,8 +23,7 @@ interface Props {
 interface State {
   spending: number;
   selectedLabelId: string;
-  // FIXME: use number(timestamp) instead of Date object
-  time: Date;
+  time: number;
   location: { latitude: number; longitude: number } | null;
   comment: string | null;
 }
@@ -41,7 +40,7 @@ export class AddSpending extends Component<Props, State> {
       time: moment()
         .startOf("day")
         .add("12", "hours")
-        .toDate(),
+        .valueOf(),
       location: null,
       comment: null,
     };
@@ -55,7 +54,7 @@ export class AddSpending extends Component<Props, State> {
     this.setState({ spending });
   };
 
-  public handleTimeChanged = (time: Date) => {
+  public handleTimeChanged = (time: number) => {
     this.setState({ time });
   };
 
@@ -72,7 +71,7 @@ export class AddSpending extends Component<Props, State> {
       return Alert.alert("無法設定消費項目，先去新增一個標籤吧！", "", [{ text: "好" }]);
     }
 
-    const newConsumption = { ...this.state, id: uuid(), createdAt: new Date() };
+    const newConsumption = { ...this.state, id: uuid(), createdAt: Date.now() };
     if (!this.state.location && this.props.isAutoLocateEnabled) {
       navigator.geolocation.getCurrentPosition(currentLocation => {
         newConsumption.location = {

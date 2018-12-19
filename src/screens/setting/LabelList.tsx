@@ -35,7 +35,7 @@ export class LabelList extends Component<Props> {
   });
 
   public handleCreateNewLabel = (category: Category, name: string) => {
-    this.props.createSpendingLabel({ category, name, id: uuid(), createdAt: new Date() });
+    this.props.createSpendingLabel({ category, name, id: uuid(), createdAt: Date.now() });
   };
 
   public render() {

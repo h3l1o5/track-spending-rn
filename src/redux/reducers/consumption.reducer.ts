@@ -13,12 +13,12 @@ export const consumptionActionTypes = {
 const createConsumption = (partialConsumption: {
   spending: number;
   selectedLabelId: string;
-  time: Date;
+  time: number;
   location: { latitude: number; longitude: number } | null;
   comment: string | null;
 }) => ({
   type: CREATE_CONSUMPTION,
-  payload: { consumption: { ...partialConsumption, id: uuid(), createdAt: new Date() } },
+  payload: { consumption: { ...partialConsumption, id: uuid(), createdAt: Date.now() } },
 });
 
 export const consumptionActionCreators = {

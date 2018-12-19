@@ -26,5 +26,5 @@ const DEFAULT_SPENDING_LABELS: Array<{ category: Category; name: string }> = [
 export default _.map(DEFAULT_SPENDING_LABELS, label => ({
   ...label,
   id: uuid(),
-  createdAt: new Date(),
+  createdAt: Date.now(),
 }));

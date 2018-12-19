@@ -50,7 +50,7 @@ export class History extends Component<Props> {
 
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Content padder>
+        <Content padder contentContainerStyle={{ paddingTop: 40 }}>
           <SectionList
             initialNumToRender={3}
             stickySectionHeadersEnabled={false}
@@ -61,7 +61,7 @@ export class History extends Component<Props> {
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  marginBottom: _.includes(expandedSections, section.title) ? 0 : 15,
+                  marginBottom: _.includes(expandedSections, section.title) ? 0 : 30,
                 }}
               >
                 <Icon type="Octicons" name="primitive-dot" style={{ color: color.primary, height: 30, width: 30 }} />

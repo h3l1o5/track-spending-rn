@@ -5,7 +5,7 @@ export interface SpendingLabel {
   id: string;
   category: Category;
   name: string;
-  createdAt?: Date;
+  createdAt?: number;
 }
 
 export interface SpendingLabelUpdateProperties {
@@ -17,10 +17,10 @@ export interface Consumption {
   id: string;
   spending: number;
   selectedLabelId: string;
-  time: Date;
+  time: number;
   location: { latitude: number; longitude: number } | null;
   comment: string | null;
-  createdAt: Date;
+  createdAt: number;
 }
 
 export interface AppState {

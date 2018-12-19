@@ -23,8 +23,8 @@ interface State {
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   selectedLabel?: SpendingLabel;
-  time: Date;
-  onTimeChanged: (time: Date) => void;
+  time: number;
+  onTimeChanged: (time: number) => void;
   location: { latitude: number; longitude: number } | null;
   onLocationChanged: (location: { latitude: number; longitude: number } | null) => void;
   comment: string | null;
@@ -162,13 +162,13 @@ export class InfoPanel extends Component<Props> {
         </View>
         <DateTimePicker
           isVisible={this.state.isDateTimePickerVisible}
-          date={time}
+          date={moment(time).toDate()}
           onConfirm={date => {
             onTimeChanged(
               moment(date)
                 .startOf("day")
                 .add("12", "hours")
-                .toDate()
+                .valueOf()
             );
             this.setState({ isDateTimePickerVisible: false });
           }}
