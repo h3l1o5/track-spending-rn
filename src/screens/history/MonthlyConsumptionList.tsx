@@ -44,6 +44,7 @@ export class Monthly extends Component<Props> {
 
     return (
       <SectionList
+        stickySectionHeadersEnabled={false}
         sections={monthlyConsumptionSections}
         keyExtractor={item => item.id}
         renderSectionHeader={({ section }) => (
@@ -53,7 +54,7 @@ export class Monthly extends Component<Props> {
               alignItems: "center",
             }}
           >
-            <TouchableOpacity onPress={() => this.handleSectionHeaderPressed(section.id)}>
+            <TouchableOpacity activeOpacity={1} onPress={() => this.handleSectionHeaderPressed(section.id)}>
               <View
                 style={{
                   flexDirection: "row",

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { SectionList, TouchableOpacity, StyleSheet } from "react-native";
+import { SectionList, TouchableOpacity, StyleSheet, Platform } from "react-native";
 import { Icon, Card, CardItem, Text, View } from "native-base";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { connect } from "react-redux";
@@ -54,10 +54,11 @@ export class Daily extends Component<Props> {
               flexDirection: "row",
               alignItems: "center",
               marginVertical: 15,
+              marginLeft: Platform.OS === "android" ? 1 : 0,
             }}
           >
             <Icon type="Octicons" name="primitive-dot" style={{ color: color.primary, height: 30, width: 30 }} />
-            <TouchableOpacity onPress={() => this.handleSectionHeaderPressed(section.id)}>
+            <TouchableOpacity activeOpacity={1} onPress={() => this.handleSectionHeaderPressed(section.id)}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Text style={{ fontSize: 28, color: color.primary, marginRight: 5 }}>{section.title}</Text>
                 <Icon

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Content } from "native-base";
+import { Content, View, Text } from "native-base";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
 import { SafeAreaView } from "react-native";
@@ -17,6 +17,7 @@ interface Props {
 export class History extends Component<Props> {
   public render() {
     const monthlyConsumptionSections = _.chain(this.props.consumptions)
+      .orderBy("createdAt", "desc")
       .groupBy(consumption => moment(consumption.time).format("YYYYMMDD"))
       .map((value, key) => ({ id: key, title: moment(key, "YYYYMMDD").format("D號"), data: value }))
       .orderBy(["id", "createdAt"], ["desc", "desc"])
@@ -25,10 +26,18 @@ export class History extends Component<Props> {
       .orderBy("id", "desc")
       .value();
 
+    console.log(monthlyConsumptionSections);
+
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Content padder contentContainerStyle={{ paddingTop: 40 }}>
-          <MonthlyConsumptionList monthlyConsumptionSections={monthlyConsumptionSections} />
+        <Content padder contentContainerStyle={{ flex: 1, paddingTop: 40 }}>
+          {this.props.consumptions.length > 0 ? (
+            <MonthlyConsumptionList monthlyConsumptionSections={monthlyConsumptionSections} />
+          ) : (
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              <Text style={{ fontSize: 28 }}>沒有消費記錄！</Text>
+            </View>
+          )}
         </Content>
       </SafeAreaView>
     );
