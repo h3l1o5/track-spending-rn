@@ -127,7 +127,9 @@ export class ChooseLocation extends Component<Props> {
           <Button
             style={{ backgroundColor: color.primary }}
             onPress={() => {
-              onLocationChanged(location);
+              if (onLocationChanged) {
+                onLocationChanged(location);
+              }
               navigation.goBack();
             }}
           >

@@ -23,6 +23,22 @@ export interface Consumption {
   createdAt: number;
 }
 
+export interface ConsumptionCreateProperties {
+  spending: number;
+  selectedLabelId: string;
+  time: number;
+  location: { latitude: number; longitude: number } | null;
+  comment: string | null;
+}
+
+export interface ConsumptionUpdateProperties {
+  spending?: number;
+  selectedLabelId?: string;
+  time?: number;
+  location?: { latitude: number; longitude: number } | null;
+  comment?: string | null;
+}
+
 export interface AppState {
   global: {
     isFirstTime: boolean;

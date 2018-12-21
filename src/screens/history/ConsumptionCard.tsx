@@ -3,18 +3,22 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 import { Icon, Card, CardItem, Text, View } from "native-base";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { connect } from "react-redux";
+import { NavigationScreenProp } from "react-navigation";
 import _ from "lodash";
 
-import { Consumption, AppState, SpendingLabel } from "../../typings";
+import { Consumption, AppState, SpendingLabel, ConsumptionUpdateProperties } from "../../typings";
 import color from "../../theme/color";
+import { consumptionActionCreators } from "../../redux/reducers/consumption.reducer";
 
 const styles = StyleSheet.create({
   icon: { fontSize: 20, marginRight: 5, color: color.dark },
 });
 
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   consumption: Consumption;
   spendingLabelsById: { [id: string]: SpendingLabel };
+  updateConsumption: (id: string, properties: ConsumptionUpdateProperties) => void;
 }
 export class ConsumptionCard extends Component<Props> {
   public handleLabelPressed = () => {
@@ -26,7 +30,11 @@ export class ConsumptionCard extends Component<Props> {
   };
 
   public handleLocationPressed = () => {
-    console.log("location");
+    this.props.navigation.navigate("ChooseLocation", {
+      initialLocation: this.props.consumption.location,
+      onLocationChanged: (location: { latitude: number; longitude: number }) =>
+        this.props.updateConsumption(this.props.consumption.id, { location }),
+    });
   };
 
   public handleCommentPressed = () => {
@@ -35,6 +43,8 @@ export class ConsumptionCard extends Component<Props> {
 
   public render() {
     const { spendingLabelsById, consumption } = this.props;
+
+    console.log(consumption);
 
     return (
       <Card>
@@ -73,10 +83,10 @@ export class ConsumptionCard extends Component<Props> {
           >
             {consumption.location ? (
               <MapView
+                region={{ ...consumption.location, latitudeDelta: 0.01, longitudeDelta: 0.01 }}
                 onLongPress={this.handleLocationPressed}
                 provider={PROVIDER_GOOGLE}
                 style={{ height: "100%", width: "100%" }}
-                initialRegion={{ ...consumption.location, latitudeDelta: 0.01, longitudeDelta: 0.01 }}
                 rotateEnabled={false}
                 scrollEnabled={false}
                 pitchEnabled={false}
@@ -104,6 +114,11 @@ export class ConsumptionCard extends Component<Props> {
   }
 }
 
-export default connect((state: AppState) => ({
-  spendingLabelsById: state.spendingLabel.byId,
-}))(ConsumptionCard);
+export default connect(
+  (state: AppState) => ({
+    spendingLabelsById: state.spendingLabel.byId,
+  }),
+  {
+    updateConsumption: consumptionActionCreators.updateConsumption,
+  }
+)(ConsumptionCard);

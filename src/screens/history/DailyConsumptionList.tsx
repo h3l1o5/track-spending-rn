@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { SectionList, TouchableOpacity, Platform } from "react-native";
+import { NavigationScreenProp } from "react-navigation";
 import { Icon, Text, View } from "native-base";
 import _ from "lodash";
 
@@ -11,6 +12,7 @@ interface State {
   expandedSections: string[];
 }
 interface Props {
+  navigation: NavigationScreenProp<any, any>;
   dailyConsumptionSections: Array<{
     id: string;
     title: string;
@@ -66,7 +68,7 @@ export class Daily extends Component<Props> {
         renderItem={({ item, section }: { item: Consumption; index: number; section: any }) =>
           _.includes(expandedSections, section.id) ? (
             <View style={{ borderLeftColor: color.primary, borderLeftWidth: 3, padding: 10, marginLeft: 6 }}>
-              <ConsumptionCard consumption={item} />
+              <ConsumptionCard consumption={item} navigation={this.props.navigation} />
             </View>
           ) : null
         }

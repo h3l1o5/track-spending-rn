@@ -30,7 +30,10 @@ export class History extends Component<Props> {
       <SafeAreaView style={{ flex: 1 }}>
         <Content padder contentContainerStyle={{ flex: 1 }}>
           {this.props.consumptions.length > 0 ? (
-            <MonthlyConsumptionList monthlyConsumptionSections={monthlyConsumptionSections} />
+            <MonthlyConsumptionList
+              monthlyConsumptionSections={monthlyConsumptionSections}
+              navigation={this.props.navigation}
+            />
           ) : (
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
               <Text style={{ fontSize: 28 }}>沒有消費記錄！</Text>
