@@ -26,11 +26,9 @@ export class History extends Component<Props> {
       .orderBy("id", "desc")
       .value();
 
-    console.log(monthlyConsumptionSections);
-
     return (
       <SafeAreaView style={{ flex: 1 }}>
-        <Content padder contentContainerStyle={{ flex: 1, paddingTop: 40 }}>
+        <Content padder contentContainerStyle={{ flex: 1 }}>
           {this.props.consumptions.length > 0 ? (
             <MonthlyConsumptionList monthlyConsumptionSections={monthlyConsumptionSections} />
           ) : (

@@ -48,13 +48,13 @@ export class Monthly extends Component<Props> {
         sections={monthlyConsumptionSections}
         keyExtractor={item => item.id}
         renderSectionHeader={({ section }) => (
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity activeOpacity={1} onPress={() => this.handleSectionHeaderPressed(section.id)}>
+          <TouchableOpacity activeOpacity={1} onPress={() => this.handleSectionHeaderPressed(section.id)}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <View
                 style={{
                   flexDirection: "row",
@@ -73,8 +73,8 @@ export class Monthly extends Component<Props> {
                   style={{ color: color.dark, marginLeft: 5, fontSize: 18 }}
                 />
               </View>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </TouchableOpacity>
         )}
         renderItem={({ item, section }) =>
           _.includes(expandedSections, section.id) ? <DailyConsumptionList dailyConsumptionSections={item} /> : null
