@@ -27,21 +27,6 @@ export class ChooseLocation extends Component<Props> {
     location: null,
   };
 
-  public componentDidMount() {
-    if (this.props.isAutoLocateEnabled && this.props.locationPermissionStatus === "authorized") {
-      navigator.geolocation.getCurrentPosition(({ coords }) => {
-        if (this.mapRef) {
-          this.mapRef.animateToRegion({
-            latitude: coords.latitude,
-            longitude: coords.longitude,
-            latitudeDelta: 0.0005,
-            longitudeDelta: 0.0005,
-          });
-        }
-      });
-    }
-  }
-
   public handleFindmePressed = async () => {
     if (this.props.locationPermissionStatus === "authorized") {
       navigator.geolocation.getCurrentPosition(

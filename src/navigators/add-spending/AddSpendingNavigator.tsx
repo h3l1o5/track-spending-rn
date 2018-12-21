@@ -4,7 +4,7 @@ import { createStackNavigator } from "react-navigation";
 import color from "../../theme/color";
 
 import AddSpending from "../../screens/add-spending/AddSpending";
-import ChooseLocation from "../../screens/add-spending/ChooseLocation";
+import ChooseLocation from "../../screens/shared/ChooseLocation";
 
 export default createStackNavigator(
   {

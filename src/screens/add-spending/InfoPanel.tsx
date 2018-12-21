@@ -41,10 +41,21 @@ export class InfoPanel extends Component<Props> {
 
   public handleLocationPressed = () => {
     if (!this.props.location) {
-      return this.props.navigation.navigate("ChooseLocation", {
-        initialLocation: this.props.location,
-        onLocationChanged: this.props.onLocationChanged,
-      });
+      if (this.props.isAutoLocateEnabled) {
+        navigator.geolocation.getCurrentPosition(({ coords }) => {
+          this.props.navigation.navigate("ChooseLocation", {
+            initialLocation: { latitude: coords.latitude, longitude: coords.longitude },
+            onLocationChanged: this.props.onLocationChanged,
+          });
+        });
+      } else {
+        this.props.navigation.navigate("ChooseLocation", {
+          initialLocation: null,
+          onLocationChanged: this.props.onLocationChanged,
+        });
+      }
+
+      return;
     }
 
     ActionSheet.show(
