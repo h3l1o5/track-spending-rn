@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { View, Text, Button, Icon } from "native-base";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import { NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp, NavigationScreenConfig, NavigationScreenOptions } from "react-navigation";
 import _ from "lodash";
 
 import color from "../../theme/color";

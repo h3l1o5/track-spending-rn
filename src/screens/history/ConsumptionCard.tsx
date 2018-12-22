@@ -9,6 +9,7 @@ import _ from "lodash";
 import { Consumption, AppState, SpendingLabel, ConsumptionUpdateProperties } from "../../typings";
 import color from "../../theme/color";
 import { consumptionActionCreators } from "../../redux/reducers/consumption.reducer";
+import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 
 const styles = StyleSheet.create({
   icon: { fontSize: 20, marginRight: 5, color: color.dark },
@@ -17,12 +18,18 @@ const styles = StyleSheet.create({
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   consumption: Consumption;
+  spendingLabels: SpendingLabel[];
   spendingLabelsById: { [id: string]: SpendingLabel };
   updateConsumption: (id: string, properties: ConsumptionUpdateProperties) => void;
 }
 export class ConsumptionCard extends Component<Props> {
   public handleLabelPressed = () => {
-    console.log("label");
+    this.props.navigation.navigate("EditLabel", {
+      consumption: this.props.consumption,
+      spendingLabels: this.props.spendingLabels,
+      onSelect: (selectedLabelId: string) =>
+        this.props.updateConsumption(this.props.consumption.id, { selectedLabelId }),
+    });
   };
 
   public handleSpendingPressed = () => {
@@ -119,6 +126,7 @@ export class ConsumptionCard extends Component<Props> {
 
 export default connect(
   (state: AppState) => ({
+    spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
     spendingLabelsById: state.spendingLabel.byId,
   }),
   {
