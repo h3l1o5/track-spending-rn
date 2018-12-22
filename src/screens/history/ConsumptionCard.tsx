@@ -26,7 +26,10 @@ export class ConsumptionCard extends Component<Props> {
   };
 
   public handleSpendingPressed = () => {
-    console.log("spending");
+    this.props.navigation.navigate("EditSpending", {
+      consumption: this.props.consumption,
+      onSubmit: (spending: number) => this.props.updateConsumption(this.props.consumption.id, { spending }),
+    });
   };
 
   public handleLocationPressed = () => {
