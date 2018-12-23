@@ -54,8 +54,10 @@ const byId = (state: { [id: string]: Consumption } = {}, { type, payload }: { ty
         break;
       case UPDATE_CONSUMPTION:
         draft[payload.id] = { ...draft[payload.id], ...payload.properties };
+        break;
       case DELETE_CONSUMPTION:
         delete draft[payload.id];
+        break;
     }
   });
 
