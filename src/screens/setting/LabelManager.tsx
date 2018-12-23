@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, SafeAreaView, TouchableOpacity, Alert } from "react-native";
 import { connect } from "react-redux";
-import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 import { Content, Button, ActionSheet, Input, Toast } from "native-base";
 import uuid from "uuid/v4";
 import _ from "lodash";
@@ -26,14 +26,6 @@ interface Props {
 }
 
 export class LabelManager extends Component<Props, State> {
-  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
-    title: navigation.getParam("mode") === "create" ? "新增標籤" : "編輯標籤",
-    headerTitleStyle: { color: color.primary },
-    headerBackTitleStyle: { color: color.dark },
-    headerTintColor: color.dark,
-    headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
-  });
-
   public state: State = {
     isEditingName: false,
     selectedCategory: "food",

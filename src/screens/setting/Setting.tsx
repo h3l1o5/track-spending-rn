@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { Content, Text, List, ListItem, Left, Body, Right, Icon, Switch } from "native-base";
-import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 
 import color from "../../theme/color";
 import { AppState, PermissionStatus, SpendingLabel } from "../../typings";
@@ -22,12 +22,6 @@ interface Props {
   setAutoLocate: (enabled: boolean) => void;
 }
 export class Setting extends Component<Props> {
-  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
-    title: "設定",
-    headerTitleStyle: { color: "transparent" },
-    headerTransparent: true,
-  });
-
   public render() {
     const { isAutoLocateEnabled, setAutoLocate, spendingLabels } = this.props;
 

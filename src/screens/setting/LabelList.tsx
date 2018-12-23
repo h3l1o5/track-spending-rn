@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { connect } from "react-redux";
-import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 import { Content, List, ListItem, Icon, Body, Right } from "native-base";
 import uuid from "uuid/v4";
 import _ from "lodash";
@@ -10,7 +10,6 @@ import color from "../../theme/color";
 import { AppState, SpendingLabel, Category } from "../../typings";
 import { spendingLabelSelectors, spendingLabelActionCreators } from "../../redux/reducers/spending-label.reducer";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
-import NavigationHeaderButton from "../../components/NavigationHeaderButton";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -19,21 +18,6 @@ interface Props {
 }
 
 export class LabelList extends Component<Props> {
-  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
-    title: "管理標籤",
-    headerTitleStyle: { color: color.primary },
-    headerBackTitleStyle: { color: color.dark },
-    headerTintColor: color.dark,
-    headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
-    headerRight: (
-      <NavigationHeaderButton
-        iconType="MaterialIcons"
-        iconName="add-circle-outline"
-        onPress={() => navigation.navigate("LabelManager", { mode: "create" })}
-      />
-    ),
-  });
-
   public handleCreateNewLabel = (category: Category, name: string) => {
     this.props.createSpendingLabel({ category, name, id: uuid(), createdAt: Date.now() });
   };

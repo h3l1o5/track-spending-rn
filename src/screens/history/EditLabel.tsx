@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import { Text, SafeAreaView } from "react-native";
-import { NavigationScreenConfig, NavigationScreenOptions, NavigationScreenProp } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 import _ from "lodash";
 
 import color from "../../theme/color";
@@ -13,14 +12,6 @@ interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 export class EditLabel extends Component<Props> {
-  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
-    title: "編輯消費物品",
-    headerTitleStyle: { color: color.primary },
-    headerBackTitleStyle: { color: color.dark },
-    headerTintColor: color.dark,
-    headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
-  });
-
   public render() {
     const consumption: Consumption = this.props.navigation.getParam("consumption");
     const spendingLabels: SpendingLabel[] = this.props.navigation.getParam("spendingLabels");

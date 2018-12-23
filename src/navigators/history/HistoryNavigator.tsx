@@ -18,8 +18,26 @@ export default createStackNavigator(
         header: null,
       }),
     },
-    EditSpending,
-    EditLabel,
+    EditSpending: {
+      screen: EditSpending,
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => ({
+        title: "編輯消費金額",
+        headerTitleStyle: { color: color.primary },
+        headerBackTitleStyle: { color: color.dark },
+        headerTintColor: color.dark,
+        headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
+      }),
+    },
+    EditLabel: {
+      screen: EditLabel,
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => ({
+        title: "編輯消費物品",
+        headerTitleStyle: { color: color.primary },
+        headerBackTitleStyle: { color: color.dark },
+        headerTintColor: color.dark,
+        headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
+      }),
+    },
   },
   {
     headerMode: "float",

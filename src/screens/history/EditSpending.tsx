@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, SafeAreaView } from "react-native";
 import { Content, Button, Icon } from "native-base";
-import { NavigationScreenProp, NavigationScreenConfig, NavigationScreenOptions } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 import _ from "lodash";
 
 import NumberPad from "../../components/NumberPad";
@@ -14,14 +14,6 @@ interface Props {
   navigation: NavigationScreenProp<any, any>;
 }
 export class EditSpending extends Component<Props, State> {
-  public static navigationOptions: NavigationScreenConfig<NavigationScreenOptions> = ({ navigation }) => ({
-    title: "編輯消費金額",
-    headerTitleStyle: { color: color.primary },
-    headerBackTitleStyle: { color: color.dark },
-    headerTintColor: color.dark,
-    headerStyle: { backgroundColor: color.light, borderBottomWidth: 0 },
-  });
-
   constructor(props: Props) {
     super(props);
 
