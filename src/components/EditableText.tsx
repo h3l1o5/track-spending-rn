@@ -41,7 +41,7 @@ export class EditableText extends Component<Props, State> {
               paddingLeft: 0,
               height: "auto",
               width: "100%",
-              fontSize: fontSize || 18,
+              fontSize: fontSize || 16,
               color: textColor || color.gray,
             }}
           />
@@ -50,11 +50,7 @@ export class EditableText extends Component<Props, State> {
             onPress={longPressMode ? undefined : () => this.setState({ isEditing: true })}
             onLongPress={longPressMode ? () => this.setState({ isEditing: true }) : undefined}
           >
-            <Text
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              style={{ fontSize: fontSize || 18, color: textColor || color.gray }}
-            >
+            <Text numberOfLines={1} style={{ fontSize: fontSize || 16, color: textColor || color.gray }}>
               {initialValue || placeholder || ""}
             </Text>
           </TouchableOpacity>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
-import { Icon, Card, CardItem, Text, View } from "native-base";
+import { StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { Icon, Card, CardItem, Text, View, Button } from "native-base";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
@@ -22,6 +22,7 @@ interface Props {
   spendingLabels: SpendingLabel[];
   spendingLabelsById: { [id: string]: SpendingLabel };
   updateConsumption: (id: string, properties: ConsumptionUpdateProperties) => void;
+  deleteConsumption: (id: string) => void;
 }
 export class ConsumptionCard extends Component<Props> {
   public handleLabelPressed = () => {
@@ -52,12 +53,19 @@ export class ConsumptionCard extends Component<Props> {
     this.props.updateConsumption(this.props.consumption.id, { comment });
   };
 
+  public handleDeletePressed = () => {
+    Alert.alert("", "確定要刪除這筆消費紀錄嗎？", [
+      { text: "取消", style: "cancel" },
+      { text: "刪除", style: "destructive", onPress: () => this.props.deleteConsumption(this.props.consumption.id) },
+    ]);
+  };
+
   public render() {
     const { spendingLabelsById, consumption } = this.props;
 
     return (
       <Card>
-        <CardItem bordered header style={{ flexDirection: "column", alignItems: "flex-start" }}>
+        <CardItem header style={{ flexDirection: "column", alignItems: "flex-start" }}>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
               <Icon type="Feather" name="tag" style={styles.icon} />
@@ -75,6 +83,19 @@ export class ConsumptionCard extends Component<Props> {
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+        </CardItem>
+        <CardItem header bordered>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <Icon type="Feather" name="message-square" style={styles.icon} />
+            <EditableText
+              longPressMode
+              initialValue={consumption.comment}
+              placeholder="無備註"
+              onTextChanged={this.handleCommentChanged}
+              textColor={color.dark}
+              style={{ flex: 1 }}
+            />
           </View>
         </CardItem>
         <TouchableOpacity onLongPress={this.handleLocationPressed}>
@@ -108,18 +129,14 @@ export class ConsumptionCard extends Component<Props> {
             )}
           </CardItem>
         </TouchableOpacity>
-        <CardItem footer>
-          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-            <Icon type="Feather" name="message-square" style={styles.icon} />
-            <EditableText
-              longPressMode
-              initialValue={consumption.comment}
-              placeholder="無備註"
-              onTextChanged={this.handleCommentChanged}
-              textColor={color.dark}
-              style={{ flex: 1 }}
-            />
-          </View>
+        <CardItem
+          footer
+          button
+          activeOpacity={1}
+          style={{ backgroundColor: color.danger, justifyContent: "center" }}
+          onPress={this.handleDeletePressed}
+        >
+          <Text style={{ color: color.white }}>刪除</Text>
         </CardItem>
       </Card>
     );
@@ -133,5 +150,6 @@ export default connect(
   }),
   {
     updateConsumption: consumptionActionCreators.updateConsumption,
+    deleteConsumption: consumptionActionCreators.deleteConsumption,
   }
 )(ConsumptionCard);

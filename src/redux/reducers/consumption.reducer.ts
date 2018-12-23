@@ -6,10 +6,12 @@ import { combineReducers } from "redux";
 
 const CREATE_CONSUMPTION = "CONSUMPTION:CREATE_CONSUMPTION";
 const UPDATE_CONSUMPTION = "CONSUMPTION:UPDATE_CONSUMPTION";
+const DELETE_CONSUMPTION = "CONSUMPTION:DELETE_CONSUMPTION";
 
 export const consumptionActionTypes = {
   CREATE_CONSUMPTION,
   UPDATE_CONSUMPTION,
+  DELETE_CONSUMPTION,
 };
 
 const createConsumption = (consumption: ConsumptionCreateProperties) => ({
@@ -22,9 +24,15 @@ const updateConsumption = (id: string, properties: ConsumptionUpdateProperties) 
   payload: { id, properties },
 });
 
+const deleteConsumption = (id: string) => ({
+  type: DELETE_CONSUMPTION,
+  payload: { id },
+});
+
 export const consumptionActionCreators = {
   createConsumption,
   updateConsumption,
+  deleteConsumption,
 };
 
 const ids = (state: string[] = [], { type, payload }: { type: string; payload: any }) =>
@@ -33,6 +41,8 @@ const ids = (state: string[] = [], { type, payload }: { type: string; payload: a
       case CREATE_CONSUMPTION:
         draft.push(payload.consumption.id);
         break;
+      case DELETE_CONSUMPTION:
+        return draft.filter(id => id !== payload.id);
     }
   });
 
@@ -44,6 +54,8 @@ const byId = (state: { [id: string]: Consumption } = {}, { type, payload }: { ty
         break;
       case UPDATE_CONSUMPTION:
         draft[payload.id] = { ...draft[payload.id], ...payload.properties };
+      case DELETE_CONSUMPTION:
+        delete draft[payload.id];
     }
   });
 
