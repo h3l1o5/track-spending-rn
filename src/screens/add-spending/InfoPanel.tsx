@@ -150,6 +150,7 @@ export class InfoPanel extends Component<Props> {
               initialValue={comment}
               placeholder="無"
               onTextChanged={onCommentChanged}
+              fontSize={18}
               style={{ paddingLeft: 10 }}
             />
           </View>
