@@ -11,6 +11,7 @@ import color from "../../theme/color";
 import { Category, SpendingLabel, AppState, SpendingLabelUpdateProperties } from "../../typings";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 import { spendingLabelActionCreators, spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
+import EditableText from "../../components/EditableText";
 
 interface State {
   isEditingName: boolean;
@@ -143,33 +144,13 @@ export class LabelManager extends Component<Props, State> {
           </View>
           <View style={{ padding: 35, flex: 1 }}>
             <Text style={{ fontSize: 40, fontWeight: "bold", color: color.secondary }}>名稱</Text>
-            {isEditingName ? (
-              <Input
-                defaultValue={name}
-                onChangeText={name => this.setState({ name })}
-                onEndEditing={() => {
-                  this.setState({ isEditingName: false });
-                }}
-                autoFocus
-                style={[
-                  {
-                    flex: undefined,
-                    height: "auto",
-                    width: "100%",
-                    paddingLeft: 20,
-                    paddingTop: 20,
-                    fontSize: 28,
-                    color: color.gray,
-                  },
-                ]}
-              />
-            ) : (
-              <TouchableOpacity onPress={() => this.setState({ isEditingName: true })}>
-                <Text numberOfLines={1} style={{ padding: 20, fontSize: 28, color: color.gray }}>
-                  {name || "無"}
-                </Text>
-              </TouchableOpacity>
-            )}
+            <EditableText
+              initialValue={name}
+              placeholder="無"
+              onTextChanged={name => this.setState({ name })}
+              fontSize={28}
+              style={{ paddingLeft: 20, paddingTop: 20 }}
+            />
           </View>
           {mode === "edit" && (
             <Button

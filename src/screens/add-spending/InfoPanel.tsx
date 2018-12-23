@@ -9,6 +9,7 @@ import moment from "moment";
 import color from "../../theme/color";
 import { SpendingLabel } from "../../typings";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
+import EditableText from "../../components/EditableText";
 
 const styles = StyleSheet.create({
   itemContainer: { flex: 1, justifyContent: "space-around" },
@@ -136,7 +137,7 @@ export class InfoPanel extends Component<Props> {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Text style={styles.title}>地點</Text>
               <View style={{ paddingLeft: 10, flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ color: "#5893d4" }}>(自動位置設定: {isAutoLocateEnabled ? "開啟" : "關閉"})</Text>
+                <Text style={{ color: "#5893d4" }}>(自動定位: {isAutoLocateEnabled ? "開啟" : "關閉"})</Text>
               </View>
             </View>
             <TouchableOpacity onPress={this.handleLocationPressed}>
@@ -145,30 +146,12 @@ export class InfoPanel extends Component<Props> {
           </View>
           <View style={styles.itemContainer}>
             <Text style={styles.title}>備註</Text>
-            {this.state.isEditingComment ? (
-              <Input
-                defaultValue={comment || ""}
-                onEndEditing={event => {
-                  onCommentChanged(event.nativeEvent.text);
-                  this.setState({ isEditingComment: false });
-                }}
-                autoFocus
-                style={[
-                  styles.content,
-                  {
-                    flex: undefined,
-                    height: "auto",
-                    width: "100%",
-                    paddingLeft: 10,
-                    color: color.gray,
-                  },
-                ]}
-              />
-            ) : (
-              <TouchableOpacity onPress={() => this.setState({ isEditingComment: true })}>
-                <Text style={[styles.content, { paddingLeft: 10, color: color.gray }]}>{comment || "無"}</Text>
-              </TouchableOpacity>
-            )}
+            <EditableText
+              initialValue={comment}
+              placeholder="無"
+              onTextChanged={onCommentChanged}
+              style={{ paddingLeft: 10 }}
+            />
           </View>
         </View>
         <DateTimePicker

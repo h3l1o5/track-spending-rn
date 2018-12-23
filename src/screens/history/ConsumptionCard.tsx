@@ -10,9 +10,10 @@ import { Consumption, AppState, SpendingLabel, ConsumptionUpdateProperties } fro
 import color from "../../theme/color";
 import { consumptionActionCreators } from "../../redux/reducers/consumption.reducer";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
+import EditableText from "../../components/EditableText";
 
 const styles = StyleSheet.create({
-  icon: { fontSize: 20, marginRight: 5, color: color.dark },
+  icon: { fontSize: 20, marginRight: 10, color: color.dark },
 });
 
 interface Props {
@@ -47,35 +48,33 @@ export class ConsumptionCard extends Component<Props> {
     });
   };
 
-  public handleCommentPressed = () => {
-    console.log("comment");
+  public handleCommentChanged = (comment: string) => {
+    this.props.updateConsumption(this.props.consumption.id, { comment });
   };
 
   public render() {
     const { spendingLabelsById, consumption } = this.props;
 
-    console.log(consumption);
-
     return (
       <Card>
         <CardItem bordered header style={{ flexDirection: "column", alignItems: "flex-start" }}>
           <View style={{ flexDirection: "row" }}>
-            <TouchableOpacity style={{ flex: 1 }} onLongPress={this.handleLabelPressed}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon type="Feather" name="tag" style={styles.icon} />
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+              <Icon type="Feather" name="tag" style={styles.icon} />
+              <TouchableOpacity onLongPress={this.handleLabelPressed} style={{ flex: 1 }}>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true}>
                   {spendingLabelsById ? spendingLabelsById[consumption.selectedLabelId].name : ""}
                 </Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity style={{ flex: 1 }} onLongPress={this.handleSpendingPressed}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon type="FontAwesome" name="dollar" style={styles.icon} />
+              </TouchableOpacity>
+            </View>
+            <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+              <Icon type="FontAwesome" name="dollar" style={styles.icon} />
+              <TouchableOpacity onLongPress={this.handleSpendingPressed} style={{ flex: 1 }}>
                 <Text numberOfLines={1} ellipsizeMode="middle" adjustsFontSizeToFit={true}>
                   {consumption.spending}
                 </Text>
-              </View>
-            </TouchableOpacity>
+              </TouchableOpacity>
+            </View>
           </View>
         </CardItem>
         <TouchableOpacity onLongPress={this.handleLocationPressed}>
@@ -109,16 +108,19 @@ export class ConsumptionCard extends Component<Props> {
             )}
           </CardItem>
         </TouchableOpacity>
-        <TouchableOpacity onLongPress={this.handleCommentPressed}>
-          <CardItem footer>
-            <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-              <Icon type="Feather" name="message-square" style={styles.icon} />
-              <Text numberOfLines={1} ellipsizeMode="middle" adjustsFontSizeToFit={true}>
-                {consumption.comment || "無備註"}
-              </Text>
-            </View>
-          </CardItem>
-        </TouchableOpacity>
+        <CardItem footer>
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <Icon type="Feather" name="message-square" style={styles.icon} />
+            <EditableText
+              longPressMode
+              initialValue={consumption.comment}
+              placeholder="無備註"
+              onTextChanged={this.handleCommentChanged}
+              textColor={color.dark}
+              style={{ flex: 1 }}
+            />
+          </View>
+        </CardItem>
       </Card>
     );
   }
