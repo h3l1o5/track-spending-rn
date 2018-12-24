@@ -5,9 +5,8 @@ import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
 import moment from "moment";
 import _ from "lodash";
-import uuid from "uuid/v4";
 
-import { AppState, SpendingLabel, Consumption } from "../../typings";
+import { AppState, SpendingLabel, ConsumptionCreateProperties } from "../../typings";
 import { spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import InfoPanel from "./InfoPanel";
 import ControlPanel from "./ControlPanel";
@@ -18,7 +17,7 @@ interface Props {
   navigation: NavigationScreenProp<any, any>;
   labels: SpendingLabel[];
   isAutoLocateEnabled: boolean;
-  createConsumption: (consumption: Consumption) => void;
+  createConsumption: (consumption: ConsumptionCreateProperties) => void;
 }
 interface State {
   spending: number;
@@ -71,7 +70,7 @@ export class AddSpending extends Component<Props, State> {
       return Alert.alert("無法設定消費項目，先去新增一個標籤吧！", "", [{ text: "好" }]);
     }
 
-    const newConsumption = { ...this.state, id: uuid(), createdAt: Date.now() };
+    const newConsumption = this.state;
     if (!this.state.location && this.props.isAutoLocateEnabled) {
       navigator.geolocation.getCurrentPosition(currentLocation => {
         newConsumption.location = {
