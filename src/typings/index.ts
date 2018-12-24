@@ -8,6 +8,11 @@ export interface SpendingLabel {
   createdAt?: number;
 }
 
+export interface SpendingLabelCreateProperties {
+  category: Category;
+  name: string;
+}
+
 export interface SpendingLabelUpdateProperties {
   category?: Category;
   name?: string;

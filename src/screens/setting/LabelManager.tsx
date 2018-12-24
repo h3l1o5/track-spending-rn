@@ -2,13 +2,18 @@ import React, { Component } from "react";
 import { Text, View, SafeAreaView, TouchableOpacity, Alert } from "react-native";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
-import { Content, Button, ActionSheet, Input, Toast } from "native-base";
-import uuid from "uuid/v4";
+import { Content, Button, ActionSheet, Toast } from "native-base";
 import _ from "lodash";
 
 import { CATEGORIES } from "../../constants";
 import color from "../../theme/color";
-import { Category, SpendingLabel, AppState, SpendingLabelUpdateProperties } from "../../typings";
+import {
+  Category,
+  SpendingLabel,
+  AppState,
+  SpendingLabelCreateProperties,
+  SpendingLabelUpdateProperties,
+} from "../../typings";
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 import { spendingLabelActionCreators, spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import EditableText from "../../components/EditableText";
@@ -21,7 +26,7 @@ interface State {
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   spendingLabel?: SpendingLabel;
-  createSpendingLabel: (spendingLabel: SpendingLabel) => void;
+  createSpendingLabel: (spendingLabel: SpendingLabelCreateProperties) => void;
   updateSpendingLabel: (id: string, properties: SpendingLabelUpdateProperties) => void;
   deleteSpendingLabel: (id: string) => void;
 }
@@ -69,8 +74,6 @@ export class LabelManager extends Component<Props, State> {
       this.props.createSpendingLabel({
         category: this.state.selectedCategory,
         name: this.state.name,
-        id: uuid(),
-        createdAt: Date.now(),
       });
 
       Toast.show({

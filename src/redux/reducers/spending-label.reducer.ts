@@ -2,9 +2,10 @@ import { combineReducers } from "redux";
 import { produce } from "immer";
 import _ from "lodash";
 
-import { AppState, SpendingLabel, SpendingLabelUpdateProperties } from "../../typings";
+import { AppState, SpendingLabel, SpendingLabelUpdateProperties, SpendingLabelCreateProperties } from "../../typings";
 import { DEFAULT_SPENDING_LABELS } from "../../constants";
 import { globalActionTypes } from "./global.reducer";
+import { uid } from "../../utils";
 
 const CREATE_SPENDING_LABEL = "SPENDING-LABEL:CREATE_SPENDING_LABEL";
 const UPDATE_SPENDING_LABEL = "SPENDING-LABEL:UPDATE_SPENDING_LABEL";
@@ -16,9 +17,9 @@ export const spendingLabelActionTypes = {
   DELETE_SPENDING_LABEL,
 };
 
-const createSpendingLabel = (spendingLabel: SpendingLabel) => ({
+const createSpendingLabel = (spendingLabel: SpendingLabelCreateProperties) => ({
   type: CREATE_SPENDING_LABEL,
-  payload: { spendingLabel },
+  payload: { spendingLabel: { ...spendingLabel, id: uid(), createdAt: Date.now() } },
 });
 
 const updateSpendingLabel = (id: string, properties: SpendingLabelUpdateProperties) => ({

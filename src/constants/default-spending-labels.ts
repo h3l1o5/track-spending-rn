@@ -1,6 +1,7 @@
 import { Category } from "../typings";
 import _ from "lodash";
-import uuid from "uuid/v4";
+
+import { uid } from "../utils";
 
 const DEFAULT_SPENDING_LABELS: Array<{ category: Category; name: string }> = [
   { category: "food", name: "早餐" },
@@ -25,6 +26,6 @@ const DEFAULT_SPENDING_LABELS: Array<{ category: Category; name: string }> = [
 
 export default _.map(DEFAULT_SPENDING_LABELS, label => ({
   ...label,
-  id: uuid(),
+  id: uid(),
   createdAt: Date.now(),
 }));

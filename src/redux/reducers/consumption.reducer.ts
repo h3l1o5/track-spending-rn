@@ -1,8 +1,8 @@
 import produce from "immer";
-import uuid from "uuid/v4";
+import { combineReducers } from "redux";
 
 import { Consumption, AppState, ConsumptionCreateProperties, ConsumptionUpdateProperties } from "../../typings";
-import { combineReducers } from "redux";
+import { uid } from "../../utils";
 
 const CREATE_CONSUMPTION = "CONSUMPTION:CREATE_CONSUMPTION";
 const UPDATE_CONSUMPTION = "CONSUMPTION:UPDATE_CONSUMPTION";
@@ -16,7 +16,7 @@ export const consumptionActionTypes = {
 
 const createConsumption = (consumption: ConsumptionCreateProperties) => ({
   type: CREATE_CONSUMPTION,
-  payload: { consumption: { ...consumption, id: uuid(), createdAt: Date.now() } },
+  payload: { consumption: { ...consumption, id: uid(), createdAt: Date.now() } },
 });
 
 const updateConsumption = (id: string, properties: ConsumptionUpdateProperties) => ({
