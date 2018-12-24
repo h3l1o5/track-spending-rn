@@ -28,11 +28,13 @@ export class EditableText extends Component<Props, State> {
       <View style={style}>
         {this.state.isEditing ? (
           <Input
-            defaultValue={initialValue || ""}
-            onEndEditing={event => {
+            value={initialValue || ""}
+            onChangeText={text => {
               if (onTextChanged) {
-                onTextChanged(event.nativeEvent.text);
+                onTextChanged(text);
               }
+            }}
+            onEndEditing={() => {
               this.setState({ isEditing: false });
             }}
             autoFocus
