@@ -17,6 +17,7 @@ import {
 import { getCategoryIcon, getCategoryMandarin } from "../../utils";
 import { spendingLabelActionCreators, spendingLabelSelectors } from "../../redux/reducers/spending-label.reducer";
 import EditableText from "../../components/EditableText";
+import { consumptionSelectors } from "../../redux/reducers/consumption.reducer";
 
 interface State {
   isEditingName: boolean;
@@ -26,6 +27,7 @@ interface State {
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   spendingLabel?: SpendingLabel;
+  isSpendingLabelUsed?: boolean;
   createSpendingLabel: (spendingLabel: SpendingLabelCreateProperties) => void;
   updateSpendingLabel: (id: string, properties: SpendingLabelUpdateProperties) => void;
   deleteSpendingLabel: (id: string) => void;
@@ -105,6 +107,10 @@ export class LabelManager extends Component<Props, State> {
   };
 
   public handleDeletePressed = () => {
+    if (this.props.isSpendingLabelUsed) {
+      return Alert.alert("無法刪除", "這個標籤被某些消費記錄使用中", [{ text: "好" }]);
+    }
+
     Alert.alert("警告", "確定要刪除這個標籤嗎?", [
       {
         text: "確定",
@@ -184,6 +190,10 @@ export default connect(
     spendingLabel:
       props.navigation.getParam("mode") === "edit"
         ? spendingLabelSelectors.getSpendingLabelById(state, props.navigation.getParam("labelId"))
+        : undefined,
+    isSpendingLabelUsed:
+      props.navigation.getParam("mode") === "edit"
+        ? consumptionSelectors.isSpendingLabelUsed(state, props.navigation.getParam("labelId"))
         : undefined,
   }),
   {

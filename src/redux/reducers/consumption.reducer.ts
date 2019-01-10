@@ -1,5 +1,6 @@
 import produce from "immer";
 import { combineReducers } from "redux";
+import _ from "lodash";
 
 import { Consumption, AppState, ConsumptionCreateProperties, ConsumptionUpdateProperties } from "../../typings";
 import { uid } from "../../utils";
@@ -65,4 +66,10 @@ export default combineReducers({ ids, byId });
 
 export const consumptionSelectors = {
   getConsumptions: (state: AppState) => state.consumption.ids.map(id => state.consumption.byId[id]),
+  isSpendingLabelUsed: (state: AppState, spendingLabelId: string) =>
+    !_.chain(state.consumption.ids)
+      .map(id => state.consumption.byId[id])
+      .find(consumption => consumption.selectedLabelId === spendingLabelId)
+      .isNil()
+      .value(),
 };
