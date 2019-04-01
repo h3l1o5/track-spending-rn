@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",
-    "prettier": "prettier --write 'src/**/*.tsx'",
-    "postinstall": "cd ios && pod install"
+    "prettier": "prettier --write 'src/**/*.tsx'"
   },
   "dependencies": {
     "immer": "^1.8.2",
@@ -28,6 +27,7 @@
     "redux-observable": "^1.0.0",
     "redux-persist": "^5.10.0",
     "rxjs": "^6.3.3",
+    "supercluster": "^6.0.1",
     "victory-native": "^31.0.0"
   },
   "devDependencies": {
@@ -42,6 +42,7 @@
     "@types/react-test-renderer": "^16.0.3",
     "@types/redux-persist": "^4.3.1",
     "@types/remote-redux-devtools": "^0.5.3",
+    "@types/supercluster": "^5.0.1",
     "babel-jest": "23.6.0",
     "jest": "23.6.0",
     "metro-react-native-babel-preset": "0.50.0",
