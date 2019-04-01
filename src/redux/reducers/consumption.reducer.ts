@@ -66,6 +66,8 @@ export default combineReducers({ ids, byId });
 
 export const consumptionSelectors = {
   getConsumptions: (state: AppState) => state.consumption.ids.map(id => state.consumption.byId[id]),
+  getConsumptionsWithLocation: (state: AppState) =>
+    state.consumption.ids.map(id => state.consumption.byId[id]).filter(c => c.location),
   isSpendingLabelUsed: (state: AppState, spendingLabelId: string) =>
     !_.chain(state.consumption.ids)
       .map(id => state.consumption.byId[id])
