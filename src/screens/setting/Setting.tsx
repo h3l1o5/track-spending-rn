@@ -42,7 +42,7 @@ export class Setting extends Component<Props> {
           <List>
             <ListItem icon style={{ marginVertical: 10 }}>
               <Left>
-                <Icon type="Feather" name="map-pin" style={styles.itemIcon} />
+                <Icon type="Entypo" name="location-pin" style={styles.itemIcon} />
               </Left>
               <Body>
                 <Text>自動定位</Text>
@@ -62,7 +62,7 @@ export class Setting extends Component<Props> {
               onPress={() => this.props.navigation.navigate("LabelList")}
             >
               <Left>
-                <Icon type="Feather" name="tag" style={styles.itemIcon} />
+                <Icon type="AntDesign" name="tag" style={styles.itemIcon} />
               </Left>
               <Body>
                 <Text>標籤</Text>

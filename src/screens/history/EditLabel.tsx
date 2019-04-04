@@ -38,7 +38,7 @@ export class EditLabel extends Component<Props> {
                 </Body>
                 <Right>
                   {consumption.selectedLabelId === spendingLabel.id ? (
-                    <Icon type="Feather" name="check" style={{ color: color.dark }} />
+                    <Icon type="AntDesign" name="check" style={{ color: color.dark }} />
                   ) : null}
                 </Right>
               </ListItem>

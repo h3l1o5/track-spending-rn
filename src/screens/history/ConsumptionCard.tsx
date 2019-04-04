@@ -68,7 +68,7 @@ export class ConsumptionCard extends Component<Props> {
         <CardItem header style={{ flexDirection: "column", alignItems: "flex-start" }}>
           <View style={{ flexDirection: "row" }}>
             <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-              <Icon type="Feather" name="tag" style={styles.icon} />
+              <Icon type="AntDesign" name="tag" style={styles.icon} />
               <TouchableOpacity onLongPress={this.handleLabelPressed} style={{ flex: 1 }}>
                 <Text numberOfLines={1} adjustsFontSizeToFit={true}>
                   {spendingLabelsById ? spendingLabelsById[consumption.selectedLabelId].name : ""}
@@ -87,7 +87,7 @@ export class ConsumptionCard extends Component<Props> {
         </CardItem>
         <CardItem header bordered>
           <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-            <Icon type="Feather" name="message-square" style={styles.icon} />
+            <Icon type="AntDesign" name="message1" style={styles.icon} />
             <EditableText
               longPressMode
               initialValue={consumption.comment}

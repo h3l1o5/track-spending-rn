@@ -67,7 +67,7 @@ export class EditSpending extends Component<Props, State> {
               }}
               onPress={this.handleSubmit}
             >
-              <Icon type="Feather" name="check" style={{ color: color.light }} />
+              <Icon type="AntDesign" name="check" style={{ color: color.light }} />
             </Button>
           </View>
           <NumberPad onButtonPressed={this.handleNumberPadPressed} />

@@ -59,7 +59,7 @@ export class ControlPanel extends Component<Props> {
             }}
             onPress={onSubmit}
           >
-            <Icon type="Feather" name="check" style={{ color: color.light }} />
+            <Icon type="AntDesign" name="check" style={{ color: color.light }} />
           </Button>
         </View>
         <View style={{ flexDirection: "row" }}>
