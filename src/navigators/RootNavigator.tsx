@@ -1,5 +1,4 @@
 import React from "react";
-// @ts-ignore
 import { createSwitchNavigator, createAppContainer } from "react-navigation";
 
 import MainNavigator from "./MainNavigator";
