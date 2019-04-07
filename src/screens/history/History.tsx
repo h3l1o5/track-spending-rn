@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
 import { Content, View, Text } from "native-base";
 import { connect } from "react-redux";
-import { NavigationScreenProp, NavigationScreenConfig, NavigationScreenOptions } from "react-navigation";
+import { NavigationScreenProp } from "react-navigation";
 import { SafeAreaView } from "react-native";
 import moment from "moment";
 import _ from "lodash";
@@ -41,10 +41,7 @@ const History = (props: Props) => {
     <SafeAreaView style={{ flex: 1 }}>
       <Content padder contentContainerStyle={{ flex: 1 }}>
         {props.consumptions.length > 0 ? (
-          <MonthlyConsumptionList
-            monthlyConsumptionSections={monthlyConsumptionSections}
-            navigation={props.navigation}
-          />
+          <MonthlyConsumptionList monthlyConsumptionSections={monthlyConsumptionSections} />
         ) : (
           <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
             <Text style={{ fontSize: 28 }}>沒有消費記錄！</Text>
