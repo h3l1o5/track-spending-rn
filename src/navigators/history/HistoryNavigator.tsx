@@ -10,7 +10,13 @@ import EditLabel from "../../screens/history/EditLabel";
 
 export default createStackNavigator(
   {
-    History,
+    History: {
+      screen: History,
+      navigationOptions: ({ navigation }: NavigationInjectedProps) => ({
+        headerTransparent: true,
+        header: null,
+      }),
+    },
     ChooseLocation: {
       screen: ChooseLocation,
       navigationOptions: ({ navigation }: NavigationInjectedProps) => ({

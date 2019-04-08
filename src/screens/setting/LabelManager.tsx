@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, SafeAreaView, TouchableOpacity, Alert } from "react-native";
 import { connect } from "react-redux";
 import { NavigationScreenProp } from "react-navigation";
@@ -19,11 +19,6 @@ import { spendingLabelActionCreators, spendingLabelSelectors } from "../../redux
 import EditableText from "../../components/EditableText";
 import { consumptionSelectors } from "../../redux/reducers/consumption.reducer";
 
-interface State {
-  isEditingName: boolean;
-  selectedCategory: Category;
-  name: string;
-}
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   spendingLabel?: SpendingLabel;
@@ -33,21 +28,21 @@ interface Props {
   deleteSpendingLabel: (id: string) => void;
 }
 
-export class LabelManager extends Component<Props, State> {
-  public state: State = {
-    isEditingName: false,
-    selectedCategory: "food",
-    name: "",
-  };
+const LabelManager = (props: Props) => {
+  const [selectedCategory, setSelectedCategory] = useState<Category>("food");
+  const [name, setName] = useState("");
 
-  public componentDidMount() {
-    const { navigation, spendingLabel } = this.props;
-    if (navigation.getParam("mode") === "edit" && spendingLabel) {
-      this.setState({ selectedCategory: spendingLabel.category, name: spendingLabel.name });
-    }
-  }
+  useEffect(
+    () => {
+      if (props.navigation.getParam("mode") === "edit" && props.spendingLabel) {
+        setSelectedCategory(props.spendingLabel.category);
+        setName(props.spendingLabel.name);
+      }
+    },
+    [props.spendingLabel]
+  );
 
-  public handleCategoryPressed = () => {
+  const handleCategoryPressed = () => {
     ActionSheet.show(
       {
         options: [
@@ -60,22 +55,22 @@ export class LabelManager extends Component<Props, State> {
         if (buttonIndex === CATEGORIES.length) {
           return;
         }
-        this.setState({ selectedCategory: CATEGORIES[buttonIndex] });
+        setSelectedCategory(CATEGORIES[buttonIndex]);
       }
     );
   };
 
-  public handleSubmitPressed = () => {
-    if (!this.state.name) {
+  const handleSubmitPressed = () => {
+    if (!name) {
       return Alert.alert("要幫標籤取個名字喔", "", [{ text: "好" }]);
     }
 
-    const mode = this.props.navigation.getParam("mode");
+    const mode = props.navigation.getParam("mode");
 
     if (mode === "create") {
-      this.props.createSpendingLabel({
-        category: this.state.selectedCategory,
-        name: this.state.name,
+      props.createSpendingLabel({
+        category: selectedCategory,
+        name,
       });
 
       Toast.show({
@@ -86,13 +81,13 @@ export class LabelManager extends Component<Props, State> {
         position: "bottom",
       });
 
-      this.props.navigation.goBack();
+      props.navigation.goBack();
     }
 
     if (mode === "edit") {
-      const id = _.get(this.props.spendingLabel, "id", "");
+      const id = _.get(props.spendingLabel, "id", "");
 
-      this.props.updateSpendingLabel(id, { category: this.state.selectedCategory, name: this.state.name });
+      props.updateSpendingLabel(id, { category: selectedCategory, name });
 
       Toast.show({
         type: "success",
@@ -102,12 +97,12 @@ export class LabelManager extends Component<Props, State> {
         position: "bottom",
       });
 
-      this.props.navigation.goBack();
+      props.navigation.goBack();
     }
   };
 
-  public handleDeletePressed = () => {
-    if (this.props.isSpendingLabelUsed) {
+  const handleDeletePressed = () => {
+    if (props.isSpendingLabelUsed) {
       return Alert.alert("無法刪除", "這個標籤被某些消費記錄使用中", [{ text: "好" }]);
     }
 
@@ -116,9 +111,9 @@ export class LabelManager extends Component<Props, State> {
         text: "確定",
         style: "destructive",
         onPress: () => {
-          const id = _.get(this.props.spendingLabel, "id", "");
+          const id = _.get(props.spendingLabel, "id", "");
 
-          this.props.deleteSpendingLabel(id);
+          props.deleteSpendingLabel(id);
 
           Toast.show({
             type: "success",
@@ -128,62 +123,53 @@ export class LabelManager extends Component<Props, State> {
             position: "bottom",
           });
 
-          this.props.navigation.goBack();
+          props.navigation.goBack();
         },
       },
       { text: "取消", style: "cancel" },
     ]);
   };
 
-  public render() {
-    const { selectedCategory, name, isEditingName } = this.state;
-    const mode = this.props.navigation.getParam("mode");
+  const mode = props.navigation.getParam("mode");
 
-    return (
-      <SafeAreaView style={{ flex: 1 }}>
-        <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "space-around" }}>
-          <View style={{ padding: 35, flex: 1 }}>
-            <Text style={{ fontSize: 40, fontWeight: "bold", color: color.secondary }}>類別</Text>
-            <TouchableOpacity onPress={this.handleCategoryPressed}>
-              <Text style={{ padding: 20, fontSize: 28, color: color.gray }}>
-                {getCategoryIcon(selectedCategory)}
-                {getCategoryMandarin(selectedCategory)}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{ padding: 35, flex: 1 }}>
-            <Text style={{ fontSize: 40, fontWeight: "bold", color: color.secondary }}>名稱</Text>
-            <EditableText
-              initialValue={name}
-              placeholder="無"
-              onTextChanged={name => this.setState({ name })}
-              fontSize={28}
-              style={{ paddingLeft: 20, paddingTop: 20 }}
-            />
-          </View>
-          {mode === "edit" && (
-            <Button
-              bordered
-              danger
-              block
-              style={{ marginHorizontal: 40, marginTop: 20 }}
-              onPress={this.handleDeletePressed}
-            >
-              <Text style={{ color: color.danger }}>刪除</Text>
-            </Button>
-          )}
-          <Button
-            block
-            style={{ margin: 40, marginTop: 20, backgroundColor: color.primary }}
-            onPress={this.handleSubmitPressed}
-          >
-            <Text style={{ color: color.white }}>{mode === "create" ? "新增" : "完成編輯"}</Text>
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <Content scrollEnabled={false} contentContainerStyle={{ flex: 1, justifyContent: "space-around" }}>
+        <View style={{ padding: 35, flex: 1 }}>
+          <Text style={{ fontSize: 40, fontWeight: "bold", color: color.secondary }}>類別</Text>
+          <TouchableOpacity onPress={handleCategoryPressed}>
+            <Text style={{ padding: 20, fontSize: 28, color: color.gray }}>
+              {getCategoryIcon(selectedCategory)}
+              {getCategoryMandarin(selectedCategory)}
+            </Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{ padding: 35, flex: 1 }}>
+          <Text style={{ fontSize: 40, fontWeight: "bold", color: color.secondary }}>名稱</Text>
+          <EditableText
+            initialValue={name}
+            placeholder="無"
+            onTextChanged={name => setName(name)}
+            fontSize={28}
+            style={{ paddingLeft: 20, paddingTop: 20 }}
+          />
+        </View>
+        {mode === "edit" && (
+          <Button bordered danger block style={{ marginHorizontal: 40, marginTop: 20 }} onPress={handleDeletePressed}>
+            <Text style={{ color: color.danger }}>刪除</Text>
           </Button>
-        </Content>
-      </SafeAreaView>
-    );
-  }
-}
+        )}
+        <Button
+          block
+          style={{ margin: 40, marginTop: 20, backgroundColor: color.primary }}
+          onPress={handleSubmitPressed}
+        >
+          <Text style={{ color: color.white }}>{mode === "create" ? "新增" : "完成編輯"}</Text>
+        </Button>
+      </Content>
+    </SafeAreaView>
+  );
+};
 
 export default connect(
   (state: AppState, props: Props) => ({

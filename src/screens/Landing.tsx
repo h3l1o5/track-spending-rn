@@ -1,40 +1,32 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Text, View, AppState } from "react-native";
 import { NavigationScreenProp } from "react-navigation";
 import Permissions from "react-native-permissions";
 import _ from "lodash";
 
-import { spendingLabelSelectors } from "../redux/reducers/spending-label.reducer";
 import { permissionActionCreators } from "../redux/reducers/permission.reducer";
-import { PermissionStatus, AppState as _AppState, SpendingLabel } from "../typings";
+import { PermissionStatus, AppState as _AppState } from "../typings";
 import { globalActionCreators } from "../redux/reducers/global.reducer";
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
   modifyLocationPermission: (status: PermissionStatus) => void;
-  spendingLabels: SpendingLabel[];
   isFirstTimeUser: boolean;
   onboard: () => void;
 }
-interface State {
-  firstTimeUserChecked: boolean;
-  permissionsChecked: boolean;
-}
 
-export class Landing extends Component<Props> {
-  public state: State = {
-    firstTimeUserChecked: false,
-    permissionsChecked: false,
-  };
+const Landing = (props: Props) => {
+  const [isCheckedFirstTimeUser, setIsCheckedFirstTimeUser] = useState(false);
+  const [isCheckedPermission, setIsCheckedPermission] = useState(false);
+  const [isCheckingPermission, setIsCheckingPermission] = useState(false);
 
-  private checkPermissions = async () => {
+  const checkPermissions = async () => {
     const handleAppStateChange = async (nextAppState: "active" | "background" | "inactive") => {
-      console.log("state change: ", nextAppState);
       if (nextAppState === "active") {
         try {
           const locationPermission = await Permissions.check("location");
-          this.props.modifyLocationPermission(locationPermission);
+          props.modifyLocationPermission(locationPermission);
         } catch (error) {
           console.error(error);
         }
@@ -46,44 +38,48 @@ export class Landing extends Component<Props> {
       AppState.addEventListener("change", handleAppStateChange);
       // First time check
       const locationPermission = await Permissions.check("location");
-      this.props.modifyLocationPermission(locationPermission);
-      this.setState({ permissionsChecked: true });
+      props.modifyLocationPermission(locationPermission);
+      setIsCheckedPermission(true);
     } catch (error) {
       console.error(error);
     }
   };
 
-  private checkIsFirstTimeUser = () => {
-    if (this.props.isFirstTimeUser) {
-      this.props.onboard();
+  const checkFirstTimeUser = () => {
+    if (props.isFirstTimeUser) {
+      props.onboard();
     }
-    this.setState({ firstTimeUserChecked: true });
+    setIsCheckedFirstTimeUser(true);
   };
 
-  public async componentDidMount() {
-    this.checkPermissions();
-    this.checkIsFirstTimeUser();
-  }
+  useEffect(
+    () => {
+      if (!isCheckedFirstTimeUser) {
+        checkFirstTimeUser();
+      }
 
-  public async componentDidUpdate() {
-    if (this.state.firstTimeUserChecked && this.state.permissionsChecked) {
-      this.props.navigation.navigate("Main");
-    }
-  }
+      if (!isCheckedPermission && !isCheckingPermission) {
+        setIsCheckingPermission(true);
+        checkPermissions();
+      }
 
-  public render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text> Loading ... </Text>
-      </View>
-    );
-  }
-}
+      if (isCheckedFirstTimeUser && isCheckedPermission) {
+        props.navigation.navigate("Main");
+      }
+    },
+    [isCheckedFirstTimeUser, isCheckedPermission]
+  );
+
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Text> Loading ... </Text>
+    </View>
+  );
+};
 
 export default connect(
   (state: _AppState) => ({
     isFirstTimeUser: state.global.isFirstTime,
-    spendingLabels: spendingLabelSelectors.getSpendingLabels(state),
   }),
   {
     onboard: globalActionCreators.onboard,

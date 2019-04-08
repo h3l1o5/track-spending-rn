@@ -1,6 +1,7 @@
+import uid from "./generate-uid";
 import getCategoryIcon from "./get-category-icon";
 import getCategoryMandarin from "./get-category-mandarin";
 import getPermission from "./get-permission";
-import uid from "./generate-uid";
+import getCurrentLocation from "./get-current-location";
 
-export { getCategoryIcon, getCategoryMandarin, getPermission, uid };
+export { uid, getCategoryIcon, getCategoryMandarin, getPermission, getCurrentLocation };
